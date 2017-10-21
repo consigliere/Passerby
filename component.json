@@ -1,0 +1,15 @@
+{
+    "name": "Passerby",
+    "alias": "passerby",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "App\\Components\\Passerby\\Providers\\PasserbyServiceProvider"
+    ],
+    "aliases":{},
+    "files": [
+        "start.php"
+    ]
+}

@@ -1,5 +1,9 @@
 <?php
 
 return [
-    'name' => 'Passerby'
+    'name'  => 'Passerby',
+    'route' => [
+        'api' => false,
+        'web' => false,
+    ],
 ];

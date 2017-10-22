@@ -1,4 +1,8 @@
 <?php
+/**
+ * User.php
+ * Created by rn on 10/22/2017 3:35 AM.
+ */
 
 namespace App\Components\Passerby\Models;
 

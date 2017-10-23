@@ -7,9 +7,8 @@
 namespace App\Components\Passerby\Repositories;
 
 use App\Components\Passerby\Models\User;
-use App\Components\Passerby\Repositories\DatabaseRepository;
 
-class UserRepository extends DatabaseRepository
+class UserRepository extends DatabaseRepository implements UserRepositoryInterface
 {
     public function getModel()
     {

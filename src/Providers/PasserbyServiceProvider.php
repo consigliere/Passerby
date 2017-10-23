@@ -34,6 +34,7 @@ class PasserbyServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->register(\App\Components\Passerby\Providers\AuthServiceProvider::class);
         $this->app->register(\Optimus\ApiConsumer\Provider\LaravelServiceProvider::class);
     }
 

@@ -3,6 +3,7 @@
 namespace App\Components\Passerby\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Components\Passerby\Repositories\Users\UserRepository;
 
 class PasserbyServiceProvider extends ServiceProvider
 {
@@ -25,6 +26,9 @@ class PasserbyServiceProvider extends ServiceProvider
         $this->registerViews();
 
         $this->loadMigrationsFrom(__DIR__.'/../../Database/Migrations');
+
+        $dispatcher = $this->app->make('events');
+        $dispatcher->subscribe('App\Components\Passerby\Listeners\AuthEventListener');
     }
 
     /**
@@ -34,8 +38,11 @@ class PasserbyServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->register(\App\Components\Passerby\Providers\AuthServiceProvider::class);
-        $this->app->register(\Optimus\ApiConsumer\Provider\LaravelServiceProvider::class);
+        $this->app->register(\App\Components\Signature\Providers\SignatureServiceProvider::class);
+
+        $this->app->bind('App\Components\Passerby\Repositories\UserRepositoryInterface', function ($app) {
+            return new UserRepository();
+        });
     }
 
     /**

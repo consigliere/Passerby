@@ -10,13 +10,13 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Components\Passerby\Requests\LoginRequest;
 use App\Components\Passerby\Http\Controllers\Controller;
-use App\Components\Passerby\Services\AuthService;
+use App\Components\Passerby\Services\LoginService;
 
 class LoginController extends Controller
 {
     private $loginProxy;
 
-    public function __construct(AuthService $loginProxy)
+    public function __construct(LoginService $loginProxy)
     {
         $this->loginProxy = $loginProxy;
     }

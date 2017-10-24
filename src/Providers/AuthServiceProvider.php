@@ -7,7 +7,6 @@
 namespace App\Components\Passerby\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Schema;
 use App\Components\Passerby\Repositories\UserRepository;
 
 class AuthServiceProvider extends ServiceProvider
@@ -19,7 +18,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Schema::defaultStringLength(191);
+        $dispatcher = $this->app->make('events');
+        $dispatcher->subscribe('App\Components\Passerby\Listeners\AuthEventListener');
     }
 
     /**
@@ -29,8 +29,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->register(\Api\App\Providers\AppServiceProvider::class);
-
         $this->app->bind('App\Components\Passerby\Repositories\UserRepositoryInterface', function ($app) {
             return new UserRepository();
         });

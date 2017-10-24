@@ -42,6 +42,8 @@ class AuthService
      *
      * @param string $email
      * @param string $password
+     *
+     * @return array
      */
     public function attemptLogin($email, $password)
     {
@@ -75,6 +77,8 @@ class AuthService
      *
      * @param string $grantType what type of grant type should be proxied
      * @param array  $data      the data to send to the server
+     *
+     * @return array
      */
     public function proxy($grantType, array $data = [])
     {

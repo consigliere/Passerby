@@ -10,9 +10,13 @@ use App\Components\Passerby\Models\User;
 
 class UserRepository extends DatabaseRepository implements UserRepositoryInterface
 {
+    private $userCfg;
+
     public function getModel()
     {
-        return new User();
+        $this->userCfg = config('auth.providers.users.model');
+
+        return new $this->userCfg;
     }
 
     public function create(array $data)

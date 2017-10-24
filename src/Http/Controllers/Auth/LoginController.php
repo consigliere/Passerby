@@ -1,7 +1,7 @@
 <?php
 /**
- * AuthController.php
- * Created by rn on 10/22/2017 11:43 PM.
+ * LoginController.php
+ * Created by rn on 10/24/2017 3:52 AM.
  */
 
 namespace App\Components\Passerby\Http\Controllers\Auth;
@@ -12,7 +12,7 @@ use App\Components\Passerby\Requests\LoginRequest;
 use App\Components\Passerby\Http\Controllers\Controller;
 use App\Components\Passerby\Services\AuthService;
 
-class AuthController extends Controller
+class LoginController extends Controller
 {
     private $loginProxy;
 

@@ -15,6 +15,7 @@
   "require"    : {
     "illuminate/support"   : "5.5.*",
     "illuminate/contracts" : "5.5.*",
+    "laravel/passport"     : "^4.0",
     "consigliere/signature": "0.4.*"
   }
 }

@@ -3,7 +3,7 @@
 namespace App\Components\Passerby\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Components\Passerby\Repositories\Users\UserRepository;
+use App\Components\Passerby\Repositories\Login\LoginRepository;
 
 class PasserbyServiceProvider extends ServiceProvider
 {
@@ -28,7 +28,7 @@ class PasserbyServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__.'/../../Database/Migrations');
 
         $dispatcher = $this->app->make('events');
-        $dispatcher->subscribe('App\Components\Passerby\Listeners\AuthEventListener');
+        $dispatcher->subscribe('App\Components\Passerby\Listeners\LoginEventListener');
     }
 
     /**
@@ -40,8 +40,8 @@ class PasserbyServiceProvider extends ServiceProvider
     {
         $this->app->register(\App\Components\Signature\Providers\SignatureServiceProvider::class);
 
-        $this->app->bind('App\Components\Passerby\Repositories\UserRepositoryInterface', function ($app) {
-            return new UserRepository();
+        $this->app->bind('App\Components\Passerby\Repositories\LoginRepositoryInterface', function ($app) {
+            return new LoginRepository();
         });
     }
 

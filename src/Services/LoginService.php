@@ -8,7 +8,7 @@ namespace App\Components\Passerby\Services;
 
 use Illuminate\Foundation\Application;
 use App\Components\Passerby\Exceptions\InvalidCredentialsException;
-use App\Components\Passerby\Repositories\UserRepositoryInterface;
+use App\Components\Passerby\Repositories\LoginRepositoryInterface;
 
 class LoginService
 {
@@ -24,11 +24,11 @@ class LoginService
 
     private $request;
 
-    private $userRepository;
+    private $loginRepository;
 
-    public function __construct(Application $app, UserRepositoryInterface $userRepository)
+    public function __construct(Application $app, LoginRepositoryInterface $loginRepository)
     {
-        $this->userRepository = $userRepository;
+        $this->loginRepository = $loginRepository;
 
         $this->apiConsumer = $app->make('apiconsumer');
         $this->auth        = $app->make('auth');
@@ -47,7 +47,7 @@ class LoginService
      */
     public function attemptLogin($email, $password)
     {
-        $user = $this->userRepository->getWhere('email', $email)->first();
+        $user = $this->loginRepository->getWhere('email', $email)->first();
 
         if (!is_null($user)) {
             return $this->proxy('password', [

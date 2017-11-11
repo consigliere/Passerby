@@ -4,6 +4,9 @@ namespace App\Components\Passerby\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Components\Passerby\Repositories\Login\LoginRepository;
+use App\Components\Passerby\Repositories\Permissions\PermissionRepository;
+use App\Components\Passerby\Repositories\Roles\RoleRepository;
+use App\Components\Passerby\Repositories\Users\UserRepository;
 
 class PasserbyServiceProvider extends ServiceProvider
 {
@@ -29,6 +32,9 @@ class PasserbyServiceProvider extends ServiceProvider
 
         $dispatcher = $this->app->make('events');
         $dispatcher->subscribe('App\Components\Passerby\Listeners\LoginEventListener');
+        $dispatcher->subscribe('App\Components\Passerby\Listeners\PermissionEventListener');
+        $dispatcher->subscribe('App\Components\Passerby\Listeners\RoleEventListener');
+        $dispatcher->subscribe('App\Components\Passerby\Listeners\UserEventListener');
     }
 
     /**
@@ -42,6 +48,18 @@ class PasserbyServiceProvider extends ServiceProvider
 
         $this->app->bind('App\Components\Passerby\Repositories\LoginRepositoryInterface', function ($app) {
             return new LoginRepository();
+        });
+
+        $this->app->bind('App\Components\Passerby\Repositories\PermissionRepositoryInterface', function ($app) {
+            return new PermissionRepository();
+        });
+
+        $this->app->bind('App\Components\Passerby\Repositories\RoleRepositoryInterface', function ($app) {
+            return new RoleRepository();
+        });
+
+        $this->app->bind('App\Components\Passerby\Repositories\UserRepositoryInterface', function ($app) {
+            return new UserRepository();
         });
     }
 

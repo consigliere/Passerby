@@ -20,4 +20,12 @@ class UserRepository extends Repository implements UserRepositoryInterface
 
         return new $this->userCfg;
     }
+
+    public function create(array $data)
+    {
+    }
+
+    public function update(User $user, array $data)
+    {
+    }
 }

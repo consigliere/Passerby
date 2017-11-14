@@ -22,4 +22,24 @@ class UserService
         $this->db          = $app->make('db');
         $this->request     = $app->make('request');
     }
+
+    public function list()
+    {
+
+    }
+
+    public function create()
+    {
+
+    }
+
+    public function update()
+    {
+
+    }
+
+    public function delete()
+    {
+
+    }
 }

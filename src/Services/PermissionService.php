@@ -22,4 +22,24 @@ class PermissionService
         $this->db          = $app->make('db');
         $this->request     = $app->make('request');
     }
+
+    public function list()
+    {
+
+    }
+
+    public function create(array $data)
+    {
+        return $this->permissionRepository->create($data);
+    }
+
+    public function update()
+    {
+
+    }
+
+    public function delete()
+    {
+
+    }
 }

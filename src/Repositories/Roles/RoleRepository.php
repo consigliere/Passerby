@@ -9,6 +9,7 @@ namespace App\Components\Passerby\Repositories\Roles;
 use App\Components\Passerby\Models\User;
 use App\Components\Passerby\Repositories\Repository;
 use App\Components\Passerby\Repositories\RoleRepositoryInterface;
+use Spatie\Permission\Models\Role;
 
 class RoleRepository extends Repository implements RoleRepositoryInterface
 {
@@ -19,5 +20,15 @@ class RoleRepository extends Repository implements RoleRepositoryInterface
         $this->userCfg = config('auth.providers.users.model');
 
         return new $this->userCfg;
+    }
+
+    public function create(array $data)
+    {
+        Role::create(['name' => 'writer']);
+    }
+
+    public function update(Role $role, array $data)
+    {
+
     }
 }

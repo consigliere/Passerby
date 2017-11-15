@@ -3,6 +3,7 @@
 namespace App\Components\Passerby\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Event;
 use App\Components\Passerby\Repositories\Login\LoginRepository;
 use App\Components\Passerby\Repositories\Permissions\PermissionRepository;
 use App\Components\Passerby\Repositories\Roles\RoleRepository;
@@ -31,10 +32,14 @@ class PasserbyServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__.'/../../Database/Migrations');
 
         $dispatcher = $this->app->make('events');
-        $dispatcher->subscribe('App\Components\Passerby\Listeners\LoginEventListener');
-        $dispatcher->subscribe('App\Components\Passerby\Listeners\PermissionEventListener');
-        $dispatcher->subscribe('App\Components\Passerby\Listeners\RoleEventListener');
-        $dispatcher->subscribe('App\Components\Passerby\Listeners\UserEventListener');
+        $dispatcher->subscribe('App\Components\Passerby\Listeners\LoginEventSubscriber');
+        //$dispatcher->subscribe('App\Components\Passerby\Listeners\PermissionEventSubscriber');
+        //$dispatcher->subscribe('App\Components\Passerby\Listeners\RoleEventSubscriber');
+        //$dispatcher->subscribe('App\Components\Passerby\Listeners\UserEventSubscriber');
+
+        Event::subscribe('App\Components\Passerby\Listeners\PermissionEventSubscriber');
+        Event::subscribe('App\Components\Passerby\Listeners\RoleEventSubscriber');
+        Event::subscribe('App\Components\Passerby\Listeners\UserEventSubscriber');
     }
 
     /**

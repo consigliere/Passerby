@@ -6,38 +6,65 @@
 
 namespace App\Components\Passerby\Repositories\Permissions;
 
-use App\Components\Passerby\Models\User;
 use App\Components\Passerby\Repositories\Repository;
 use App\Components\Passerby\Repositories\PermissionRepositoryInterface;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Contracts\Events\Dispatcher;
+
 
 class PermissionRepository extends Repository implements PermissionRepositoryInterface
 {
+    private $permission;
+    private $dispatcher;
+
     public function getModel()
     {
         return new Permission;
     }
 
-    public function create(array $data)
+    public function create(array $data = [])
     {
-        $permission = $this->getModel();
+        try {
+            $this->permission = $this->getModel();
 
-        $permission->fill($data);
+            $this->permission->name = $data['name'];
 
-        $permission->save();
+            $this->permission->save();
+        }
+        catch (\Exception $e) {
+            $this->permission = [
+                'status' => false,
+                'e'      => $e,
+            ];
 
-        return $permission;
+            return $this->permission;
+        }
+
+        return $this->permission;
     }
 
-    public function update($id, $newValue, array $data)
+    public function update(array $data = [])
     {
-        //$flight = App\Flight::find($id);
-        $permission = $this->getModel()->find($id);
+        //$this->permission = Permission::find($data['id']);
 
-        $permission->name = 'New Flight Name';
+        //return $this->permission;
 
-        $permission->save();
+        try {
+            $this->permission = $this->getModel()->find($data['id']);
 
-        return $permission;
+            $this->permission->name = $data['name'];
+
+            $this->permission->save();
+        }
+        catch (\Exception $e) {
+            $this->permission = [
+                'status' => false,
+                'e'      => $e,
+            ];
+
+            return $this->permission;
+        }
+
+        return $this->permission;
     }
 }

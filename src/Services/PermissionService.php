@@ -33,9 +33,9 @@ class PermissionService
         return $this->permissionRepository->create($data);
     }
 
-    public function update(array $data)
+    public function update(array $data, $id)
     {
-        return $this->permissionRepository->update($data);
+        return $this->permissionRepository->update($data, $id);
     }
 
     public function delete()

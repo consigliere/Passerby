@@ -11,10 +11,15 @@ class PermissionEventSubscriber
 {
     public function subscribe($events)
     {
-        $events->listen('user.permission.do.something', 'App\Components\Passerby\Listeners\PermissionEventSubscriber@doSomething', 10);
+        $events->listen('permission.create.success', 'App\Components\Passerby\Listeners\PermissionEventSubscriber@onCreateSuccess', 10);
+        $events->listen('permission.create.error', 'App\Components\Passerby\Listeners\PermissionEventSubscriber@onCreateError', 10);
     }
 
-    public function doSomething()
+    public function onCreateSuccess()
+    {
+
+    }
+    public function onCreateError()
     {
 
     }

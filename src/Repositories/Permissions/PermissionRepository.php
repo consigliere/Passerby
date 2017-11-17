@@ -10,12 +10,12 @@ use App\Components\Passerby\Repositories\Repository;
 use App\Components\Passerby\Repositories\PermissionRepositoryInterface;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Support\Facades\Event;
 
 
 class PermissionRepository extends Repository implements PermissionRepositoryInterface
 {
     private $permission;
-    private $dispatcher;
 
     public function getModel()
     {
@@ -24,46 +24,22 @@ class PermissionRepository extends Repository implements PermissionRepositoryInt
 
     public function create(array $data = [])
     {
-        try {
-            $this->permission = $this->getModel();
+        $this->permission = $this->getModel();
 
-            $this->permission->name = $data['name'];
+        $this->permission->name = $data['name'];
 
-            $this->permission->save();
-        }
-        catch (\Exception $e) {
-            $this->permission = [
-                'status' => false,
-                'e'      => $e,
-            ];
-
-            return $this->permission;
-        }
+        $this->permission->save();
 
         return $this->permission;
     }
 
-    public function update(array $data = [])
+    public function update(array $data = [], $id)
     {
-        //$this->permission = Permission::find($data['id']);
+        $this->permission = $this->getModel()->find($id);
 
-        //return $this->permission;
+        $this->permission->name = $data['name'];
 
-        try {
-            $this->permission = $this->getModel()->find($data['id']);
-
-            $this->permission->name = $data['name'];
-
-            $this->permission->save();
-        }
-        catch (\Exception $e) {
-            $this->permission = [
-                'status' => false,
-                'e'      => $e,
-            ];
-
-            return $this->permission;
-        }
+        $this->permission->save();
 
         return $this->permission;
     }

@@ -13,7 +13,7 @@ use App\Components\Passerby\Requests\PermissionUpdateRequest;
 use App\Components\Passerby\Services\PermissionService;
 
 
-class PermissionController
+class PermissionController extends Controller
 {
     private $permissionService;
 
@@ -24,12 +24,13 @@ class PermissionController
 
     public function create(PermissionCreateRequest $request)
     {
-        $this->permissionService->create($request->all());
+        return $this->response($this->permissionService->create($request->all()));
     }
 
-    public function update(PermissionUpdateRequest $request)
+    public function update(PermissionUpdateRequest $request, $id)
     {
-        $this->permissionService->update($request->all());
+        //dd($id);
+        return $this->response($this->permissionService->update($request->all(), $id));
     }
 
 }

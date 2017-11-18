@@ -23,19 +23,19 @@ class UserService
         $this->request     = $app->make('request');
     }
 
-    public function list()
+    public function get(array $options = [])
     {
 
     }
 
-    public function create()
+    public function create(array $data)
     {
-
+        return $this->userRepository->create($data);
     }
 
-    public function update()
+    public function update(array $data, $id)
     {
-
+        return $this->userRepository->update($data, $id);
     }
 
     public function delete()

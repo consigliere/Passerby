@@ -23,9 +23,9 @@ class PermissionService
         $this->request     = $app->make('request');
     }
 
-    public function list()
+    public function get(array $options = [])
     {
-
+        return $this->permissionRepository->get($options);
     }
 
     public function create(array $data)

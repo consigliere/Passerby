@@ -27,7 +27,7 @@ class RoleRepository extends Repository implements RoleRepositoryInterface
         Role::create(['name' => 'writer']);
     }
 
-    public function update(Role $role, array $data)
+    public function update(array $data, $id)
     {
 
     }

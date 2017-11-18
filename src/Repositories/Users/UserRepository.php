@@ -25,7 +25,7 @@ class UserRepository extends Repository implements UserRepositoryInterface
     {
     }
 
-    public function update(User $user, array $data)
+    public function update(array $data, $id)
     {
     }
 }

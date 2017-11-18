@@ -6,11 +6,9 @@
 
 namespace App\Components\Passerby\Repositories;
 
-use Spatie\Permission\Models\Role;
-
 interface RoleRepositoryInterface
 {
     public function create(array $data);
 
-    public function update(Role $role, array $data);
+    public function update(array $data, $id);
 }

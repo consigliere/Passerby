@@ -22,6 +22,14 @@ class PermissionController extends Controller
         $this->permissionService = $permissionService;
     }
 
+    public function get()
+    {
+        $resourceOptions = $this->parseResourceOptions();
+
+        return $this->response($this->permissionService->get($resourceOptions));
+
+    }
+
     public function create(PermissionCreateRequest $request)
     {
         return $this->response($this->permissionService->create($request->all()));
@@ -29,7 +37,6 @@ class PermissionController extends Controller
 
     public function update(PermissionUpdateRequest $request, $id)
     {
-        //dd($id);
         return $this->response($this->permissionService->update($request->all(), $id));
     }
 

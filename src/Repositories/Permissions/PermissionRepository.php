@@ -9,9 +9,6 @@ namespace App\Components\Passerby\Repositories\Permissions;
 use App\Components\Passerby\Repositories\Repository;
 use App\Components\Passerby\Repositories\PermissionRepositoryInterface;
 use Spatie\Permission\Models\Permission;
-use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Support\Facades\Event;
-
 
 class PermissionRepository extends Repository implements PermissionRepositoryInterface
 {

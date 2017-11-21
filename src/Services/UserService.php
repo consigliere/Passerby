@@ -15,17 +15,11 @@ class UserService
     public function __construct(Application $app, UserRepositoryInterface $userRepository)
     {
         $this->userRepository = $userRepository;
-
-        $this->apiConsumer = $app->make('apiconsumer');
-        $this->auth        = $app->make('auth');
-        $this->cookie      = $app->make('cookie');
-        $this->db          = $app->make('db');
-        $this->request     = $app->make('request');
     }
 
     public function get(array $options = [])
     {
-
+        return $this->userRepository->get($options);
     }
 
     public function create(array $data)
@@ -38,8 +32,8 @@ class UserService
         return $this->userRepository->update($data, $id);
     }
 
-    public function delete()
+    public function delete($id)
     {
-
+        return $this->userRepository->delete($id);
     }
 }

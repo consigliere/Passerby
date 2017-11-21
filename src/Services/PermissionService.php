@@ -15,12 +15,6 @@ class PermissionService
     public function __construct(Application $app, PermissionRepositoryInterface $permissionRepository)
     {
         $this->permissionRepository = $permissionRepository;
-
-        $this->apiConsumer = $app->make('apiconsumer');
-        $this->auth        = $app->make('auth');
-        $this->cookie      = $app->make('cookie');
-        $this->db          = $app->make('db');
-        $this->request     = $app->make('request');
     }
 
     public function get(array $options = [])
@@ -38,8 +32,13 @@ class PermissionService
         return $this->permissionRepository->update($data, $id);
     }
 
-    public function delete()
+    public function delete($id)
     {
+        return $this->permissionRepository->delete($id);
+    }
 
+    public function deleteWhereArray(array $clauses)
+    {
+        return $this->permissionRepository->deleteWhereArray($clauses);
     }
 }

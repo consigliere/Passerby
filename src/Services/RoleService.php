@@ -15,17 +15,11 @@ class RoleService
     public function __construct(Application $app, RoleRepositoryInterface $roleRepository)
     {
         $this->roleRepository = $roleRepository;
-
-        $this->apiConsumer = $app->make('apiconsumer');
-        $this->auth        = $app->make('auth');
-        $this->cookie      = $app->make('cookie');
-        $this->db          = $app->make('db');
-        $this->request     = $app->make('request');
     }
 
     public function get(array $options = [])
     {
-
+        return $this->roleRepository->get($options);
     }
 
     public function create(array $data)
@@ -38,8 +32,8 @@ class RoleService
         return $this->roleRepository->update($data, $id);
     }
 
-    public function delete()
+    public function delete($id)
     {
-
+        return $this->roleRepository->delete($id);
     }
 }

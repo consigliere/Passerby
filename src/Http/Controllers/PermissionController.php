@@ -6,8 +6,7 @@
 
 namespace App\Components\Passerby\Http\Controllers;
 
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+use Illuminate\Http\Request;
 use App\Components\Passerby\Requests\PermissionCreateRequest;
 use App\Components\Passerby\Requests\PermissionUpdateRequest;
 use App\Components\Passerby\Services\PermissionService;
@@ -38,6 +37,17 @@ class PermissionController extends Controller
     public function update(PermissionUpdateRequest $request, $id)
     {
         return $this->response($this->permissionService->update($request->all(), $id));
+    }
+
+    public function delete($id)
+    {
+        return $this->response($this->permissionService->delete($id));
+    }
+
+    public function deleteWhereArray(Request $request)
+    {
+        //dd($request->all());
+        return $this->response($this->permissionService->deleteWhereArray($request->all()));
     }
 
 }

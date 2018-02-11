@@ -1,7 +1,7 @@
 <?php
 /**
  * UserService.php
- * Created by rn on 11/11/2017 5:31 AM.
+ * Created by @anonymoussc on 11/11/2017 5:31 AM.
  */
 
 namespace App\Components\Passerby\Services;

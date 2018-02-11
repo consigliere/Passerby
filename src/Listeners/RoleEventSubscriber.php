@@ -1,7 +1,7 @@
 <?php
 /**
  * RoleEventSubscriber.php
- * Created by rn on 11/11/2017 6:23 AM.
+ * Created by @anonymoussc on 11/11/2017 6:23 AM.
  */
 
 namespace App\Components\Passerby\Listeners;

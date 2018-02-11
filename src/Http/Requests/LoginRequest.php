@@ -1,7 +1,7 @@
 <?php
 /**
  * LoginRequest.php
- * Created by rn on 10/22/2017 1:28 AM.
+ * Created by @anonymoussc on 10/22/2017 1:28 AM.
  */
 
 namespace App\Components\Passerby\Requests;

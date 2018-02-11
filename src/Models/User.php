@@ -1,7 +1,7 @@
 <?php
 /**
  * User.php
- * Created by rn on 10/22/2017 3:35 AM.
+ * Created by @anonymoussc on 10/22/2017 3:35 AM.
  */
 
 namespace App\Components\Passerby\Models;
@@ -11,7 +11,6 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
 
 class User extends AppUser
 {

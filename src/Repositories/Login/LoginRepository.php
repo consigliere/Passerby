@@ -1,7 +1,7 @@
 <?php
 /**
  * LoginRepository.php
- * Created by rn on 11/10/2017 10:35 AM.
+ * Created by @anonymoussc on 11/10/2017 10:35 AM.
  */
 
 namespace App\Components\Passerby\Repositories\Login;

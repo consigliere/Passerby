@@ -12,8 +12,6 @@ if (config('passerby.route.api')) {
                 Route::post('/', 'UserController@create');
                 Route::put('/{id}', 'UserController@update');
                 Route::delete('/{id}', 'UserController@delete');
-
-                Route::get('/', 'UserController@tests');
             });
 
             Route::group(['middleware' => 'api', 'prefix' => 'role', 'namespace' => 'App\Components\Passerby\Http\Controllers'], function() {

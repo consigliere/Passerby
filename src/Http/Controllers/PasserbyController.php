@@ -1,4 +1,8 @@
 <?php
+/**
+ * PasserbyController.php
+ * Created by @anonymoussc on 02/11/2018 4:07 PM.
+ */
 
 namespace App\Components\Passerby\Http\Controllers;
 

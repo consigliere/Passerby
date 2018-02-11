@@ -1,7 +1,7 @@
 <?php
 /**
  * PermissionRepository.php
- * Created by rn on 11/11/2017 6:22 AM.
+ * Created by @anonymoussc on 11/11/2017 6:22 AM.
  */
 
 namespace App\Components\Passerby\Repositories\Permissions;

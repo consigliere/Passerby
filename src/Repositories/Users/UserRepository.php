@@ -1,7 +1,7 @@
 <?php
 /**
  * UserRepository.php
- * Created by rn on 11/11/2017 5:34 AM.
+ * Created by @anonymoussc on 11/11/2017 5:34 AM.
  */
 
 namespace App\Components\Passerby\Repositories\Users;

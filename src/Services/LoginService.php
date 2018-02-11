@@ -1,7 +1,7 @@
 <?php
 /**
  * LoginService.php
- * Created by rn on 10/25/2017 4:18 AM.
+ * Created by @anonymoussc on 10/25/2017 4:18 AM.
  */
 
 namespace App\Components\Passerby\Services;

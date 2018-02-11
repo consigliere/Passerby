@@ -46,7 +46,6 @@ class PermissionController extends Controller
 
     public function deleteWhereArray(Request $request)
     {
-        //dd($request->all());
         return $this->response($this->permissionService->deleteWhereArray($request->all()));
     }
 

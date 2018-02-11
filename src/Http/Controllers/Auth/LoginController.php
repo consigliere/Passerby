@@ -1,7 +1,7 @@
 <?php
 /**
  * LoginController.php
- * Created by rn on 10/24/2017 3:52 AM.
+ * Created by @anonymoussc on 10/24/2017 3:52 AM.
  */
 
 namespace App\Components\Passerby\Http\Controllers\Auth;

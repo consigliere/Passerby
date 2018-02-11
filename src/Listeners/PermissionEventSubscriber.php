@@ -1,7 +1,7 @@
 <?php
 /**
  * PermissionEventSubscriber.php
- * Created by rn on 11/11/2017 6:16 AM.
+ * Created by @anonymoussc on 11/11/2017 6:16 AM.
  */
 
 namespace App\Components\Passerby\Listeners;

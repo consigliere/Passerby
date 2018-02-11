@@ -1,7 +1,7 @@
 <?php
 /**
  * RoleController.php
- * Created by rn on 11/11/2017 5:15 AM.
+ * Created by @anonymoussc on 11/11/2017 5:15 AM.
  */
 
 namespace App\Components\Passerby\Http\Controllers;
@@ -9,7 +9,6 @@ namespace App\Components\Passerby\Http\Controllers;
 use App\Components\Passerby\Services\RoleService;
 use App\Components\Passerby\Requests\RoleCreateRequest;
 use App\Components\Passerby\Requests\RoleUpdateRequest;
-
 
 class RoleController extends Controller
 {

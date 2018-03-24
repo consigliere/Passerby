@@ -16,7 +16,7 @@ class LoginRepository extends Repository implements LoginRepositoryInterface
 
     public function getModel()
     {
-        $this->userCfg = config('auth.providers.users.model');
+        $this->userCfg = config('auth.providers.apis.model');
 
         return new $this->userCfg;
     }

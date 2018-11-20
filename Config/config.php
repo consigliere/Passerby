@@ -1,9 +1,13 @@
 <?php
 
 return [
-    'name'  => 'Passerby',
-    'route' => [
-        'api' => false,
-        'web' => false,
+    'name'   => 'Passerby',
+    'routes' => [
+        'api' => [
+            'active' => true,
+        ],
+        'web' => [
+            'active' => false,
+        ],
     ],
 ];

@@ -1,11 +1,18 @@
 <?php
-/**
- * web.php
- * Created by rn on 10/22/2017 1:23 AM.
- */
 
-if (config('route.web')) {
-    Route::group(['middleware' => 'web', 'prefix' => 'passerby', 'namespace' => 'App\\Components\Passerby\Http\Controllers'], function () {
-        // Route::get('/', 'PasserbyController@index');
-    });
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+if (config('password.routes.web.active')) {
+    //Route::prefix('passerby')->group(function() {
+    //    Route::get('/', 'PasserbyController@index');
+    //});
 }

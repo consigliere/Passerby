@@ -15,7 +15,6 @@ class LoginService
 {
     const REFRESH_TOKEN = 'refreshToken';
 
-    private $apiConsumer;
     private $auth;
     private $cookie;
     private $db;
@@ -26,7 +25,6 @@ class LoginService
     {
         $this->loginRepository = $loginRepository;
 
-        $this->apiConsumer = $app->make('apiconsumer');
         $this->auth        = $app->make('auth');
         $this->cookie      = $app->make('cookie');
         $this->db          = $app->make('db');
@@ -47,10 +45,7 @@ class LoginService
         $credential = ['username' => $email, 'password' => $password];
 
         if ($user !== null) {
-            return $this->proxy(new Proxy, 'password', $credential, [
-                'apiconsumer' => $this->apiConsumer,
-                'cookie'      => $this->cookie,
-            ]);
+            return $this->proxy(new Proxy, 'password', $credential);
         }
 
         throw new InvalidCredentialsException();
@@ -64,10 +59,7 @@ class LoginService
     {
         $refreshToken = ['refresh_token' => $this->request->cookie(self::REFRESH_TOKEN)];
 
-        return $this->proxy(new Proxy, 'refresh_token', $refreshToken, [
-            'apiconsumer' => $this->apiConsumer,
-            'cookie'      => $this->cookie,
-        ]);
+        return $this->proxy(new Proxy, 'refresh_token', $refreshToken);
     }
 
     public function proxy($proxy, $grantType, array $data = [], array $param = []): array

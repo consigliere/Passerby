@@ -6,6 +6,7 @@
 
 namespace App\Components\Passerby\Services\Login\LoginService;
 
+use Illuminate\Support\Facades\App;
 use App\Components\Passerby\Exceptions\InvalidCredentialsException;
 
 /**
@@ -27,11 +28,13 @@ class Proxy
      */
     public function __invoke($grantType, array $data = [], array $param = []): array
     {
+        $init = $this->initialization();
+
         $data  = array_merge($data, $this->clientCredential($grantType));
-        $proxy = json_decode($this->proxyResponse($param['apiconsumer'], $data));
+        $proxy = json_decode($this->proxyResponse($init['apiconsumer'], $data));
 
         // Create a refresh token cookie
-        $param['cookie']->queue(
+        $init['cookie']->queue(
             self::REFRESH_TOKEN,
             $proxy->refresh_token,
             864000, // 10 days
@@ -41,12 +44,18 @@ class Proxy
             true // HttpOnly
         );
 
-        $response = [
+        return [
             'access_token' => $proxy->access_token,
             'expires_in'   => $proxy->expires_in,
         ];
+    }
 
-        return $response;
+    private function initialization(): array
+    {
+        $apiConsumer = App::make('apiconsumer');
+        $cookie      = App::make('cookie');
+
+        return ['apiconsumer' => $apiConsumer, 'cookie' => $cookie];
     }
 
     /**

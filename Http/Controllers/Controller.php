@@ -7,11 +7,13 @@
 namespace App\Components\Passerby\Http\Controllers;
 
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use App\Components\Signature\Http\Controllers\SignatureController as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Components\Signature\Http\Controllers\SignatureController as BaseController;
+use App\Components\Signal\Shared\Signal;
+use App\Components\Signal\Shared\ErrorLog;
 
 abstract class Controller extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests, Signal, ErrorLog;
 }

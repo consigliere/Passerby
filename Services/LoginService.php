@@ -9,21 +9,17 @@ namespace App\Components\Passerby\Services;
 use Illuminate\Foundation\Application;
 use App\Components\Passerby\Exceptions\InvalidCredentialsException;
 use App\Components\Passerby\Repositories\LoginRepositoryInterface;
+use App\Components\Passerby\Services\Login\LoginService\Proxy;
 
 class LoginService
 {
     const REFRESH_TOKEN = 'refreshToken';
 
     private $apiConsumer;
-
     private $auth;
-
     private $cookie;
-
     private $db;
-
     private $request;
-
     private $loginRepository;
 
     public function __construct(Application $app, LoginRepositoryInterface $loginRepository)
@@ -45,14 +41,15 @@ class LoginService
      *
      * @return array
      */
-    public function attemptLogin($email, $password)
+    public function attemptLogin($email, $password): array
     {
-        $user = $this->loginRepository->getWhere('email', $email)->first();
+        $user       = $this->loginRepository->getWhere('email', $email)->first();
+        $credential = ['username' => $email, 'password' => $password];
 
-        if (!is_null($user)) {
-            return $this->proxy('password', [
-                'username' => $email,
-                'password' => $password,
+        if ($user !== null) {
+            return $this->proxy(new Proxy, 'password', $credential, [
+                'apiconsumer' => $this->apiConsumer,
+                'cookie'      => $this->cookie,
             ]);
         }
 
@@ -63,61 +60,26 @@ class LoginService
      * Attempt to refresh the access token used a refresh token that
      * has been saved in a cookie
      */
-    public function attemptRefresh()
+    public function attemptRefresh(): array
     {
-        $refreshToken = $this->request->cookie(self::REFRESH_TOKEN);
+        $refreshToken = ['refresh_token' => $this->request->cookie(self::REFRESH_TOKEN)];
 
-        return $this->proxy('refresh_token', [
-            'refresh_token' => $refreshToken,
+        return $this->proxy(new Proxy, 'refresh_token', $refreshToken, [
+            'apiconsumer' => $this->apiConsumer,
+            'cookie'      => $this->cookie,
         ]);
     }
 
-    /**
-     * Proxy a request to the OAuth server.
-     *
-     * @param string $grantType what type of grant type should be proxied
-     * @param array  $data      the data to send to the server
-     *
-     * @return array
-     */
-    public function proxy($grantType, array $data = [])
+    public function proxy($proxy, $grantType, array $data = [], array $param = []): array
     {
-        $data = array_merge($data, [
-            'client_id'     => env('PASSWORD_CLIENT_ID'),
-            'client_secret' => env('PASSWORD_CLIENT_SECRET'),
-            'grant_type'    => $grantType,
-        ]);
-
-        $response = $this->apiConsumer->post('/oauth/token', $data);
-
-        if (!$response->isSuccessful()) {
-            throw new InvalidCredentialsException();
-        }
-
-        $data = json_decode($response->getContent());
-
-        // Create a refresh token cookie
-        $this->cookie->queue(
-            self::REFRESH_TOKEN,
-            $data->refresh_token,
-            864000, // 10 days
-            null,
-            null,
-            false,
-            true // HttpOnly
-        );
-
-        return [
-            'access_token' => $data->access_token,
-            'expires_in'   => $data->expires_in,
-        ];
+        return $proxy($grantType, $data, $param);
     }
 
     /**
-     * Logs out the user. We revoke access token and refresh token.
+     * Logs out the user. Revoke access token and refresh token.
      * Also instruct the client to forget the refresh cookie.
      */
-    public function logout()
+    public function logout(): void
     {
         $accessToken = $this->auth->user()->token();
 

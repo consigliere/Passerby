@@ -7,7 +7,7 @@
 namespace App\Components\Passerby\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Response;
 use App\Components\Passerby\Requests\LoginRequest;
 use App\Components\Passerby\Services\LoginService;
 
@@ -17,10 +17,9 @@ use App\Components\Passerby\Services\LoginService;
  */
 class LoginController extends Controller
 {
-    /**
-     * @var LoginService
-     */
     private $loginService;
+    private $email;
+    private $password;
 
     /**
      * LoginController constructor.
@@ -31,33 +30,56 @@ class LoginController extends Controller
         $this->loginService = $loginService;
     }
 
-    /**
-     * @param LoginRequest $request
-     * @return mixed
-     */
     public function login(LoginRequest $request)
     {
-        return $this->response($this->loginService->attemptLogin(
-            $request->input('email'),
-            $request->input('password'))
-        );
+        $this->email    = $request->input('email');
+        $this->password = $request->input('password');
+
+        try {
+            $data = $this->loginService->attemptLogin($this->email, $this->password);
+        } catch (\Exception $error) {
+            $this->fireLog('error', $error->getMessage(), ['error' => $error]);
+
+            return Response::error($error->getMessage(), $error->getCode())
+                ->setStatusCode(500);
+        }
+
+        return $this->response($data);
     }
 
     /**
+     * Request new access token
      * @param Request $request
      * @return mixed
      */
     public function refresh(Request $request)
     {
-        return $this->response($this->loginService->attemptRefresh());
+        try {
+            $data = $this->loginService->attemptRefresh();
+        } catch (\Exception $error) {
+            $this->fireLog('error', $error->getMessage(), ['error' => $error]);
+
+            return Response::error($error->getMessage(), $error->getCode())
+                ->setStatusCode(500);
+        }
+
+        return $this->response($data);
     }
 
     /**
+     * Logs out authenticated user
      * @return mixed
      */
     public function logout()
     {
-        $this->loginService->logout();
+        try {
+            $this->loginService->logout();
+        } catch (\Exception $error) {
+            $this->fireLog('error', $error->getMessage(), ['error' => $error]);
+
+            return Response::error($error->getMessage(), $error->getCode())
+                ->setStatusCode(500);
+        }
 
         return $this->response(null, 204);
     }

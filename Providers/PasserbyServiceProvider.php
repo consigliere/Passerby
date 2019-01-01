@@ -39,6 +39,7 @@ class PasserbyServiceProvider extends ServiceProvider
         $this->app->register(RouteServiceProvider::class);
 
         $this->app->register(\App\Components\Signature\Providers\SignatureServiceProvider::class);
+        $this->app->register(\App\Components\Signal\Providers\SignalServiceProvider::class);
 
         $this->app->bind(\App\Components\Passerby\Repositories\LoginRepositoryInterface::class, function ($app) {
             return new LoginRepository();

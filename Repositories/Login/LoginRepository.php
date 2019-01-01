@@ -6,6 +6,7 @@
 
 namespace App\Components\Passerby\Repositories\Login;
 
+use Illuminate\Support\Facades\Config;
 use App\Components\Passerby\Entities\User;
 use App\Components\Passerby\Repositories\Repository;
 use App\Components\Passerby\Repositories\LoginRepositoryInterface;
@@ -16,9 +17,9 @@ class LoginRepository extends Repository implements LoginRepositoryInterface
 
     public function getModel()
     {
-        // $this->userCfg = config('auth.providers.apis.model');
+        $this->userCfg = Config::get('auth.providers.apis.model');
 
-        return new User();
+        return new $this->userCfg;
     }
 
     public function create(array $data)

@@ -17,12 +17,14 @@ use App\Components\Passerby\Services\LoginService;
  */
 class LoginController extends Controller
 {
+    /**
+     * @var \App\Components\Passerby\Services\LoginService
+     */
     private $loginService;
-    private $email;
-    private $password;
 
     /**
      * LoginController constructor.
+     *
      * @param LoginService $loginService
      */
     public function __construct(LoginService $loginService)
@@ -30,13 +32,18 @@ class LoginController extends Controller
         $this->loginService = $loginService;
     }
 
+    /**
+     * @param \App\Components\Passerby\Requests\LoginRequest $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function login(LoginRequest $request)
     {
-        $this->email    = $request->input('email');
-        $this->password = $request->input('password');
+        $email    = $request->input('email');
+        $password = $request->input('password');
 
         try {
-            $data = $this->loginService->attemptLogin($this->email, $this->password);
+            $data = $this->loginService->attemptLogin($email, $password);
         } catch (\Exception $error) {
             $this->fireLog('error', $error->getMessage(), ['error' => $error]);
 
@@ -49,7 +56,9 @@ class LoginController extends Controller
 
     /**
      * Request new access token
+     *
      * @param Request $request
+     *
      * @return mixed
      */
     public function refresh(Request $request)

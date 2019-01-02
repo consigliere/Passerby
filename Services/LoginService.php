@@ -11,24 +11,52 @@ use App\Components\Passerby\Exceptions\InvalidCredentialsException;
 use App\Components\Passerby\Repositories\LoginRepositoryInterface;
 use App\Components\Passerby\Services\Login\LoginService\Proxy;
 
+/**
+ * Class LoginService
+ * @package App\Components\Passerby\Services
+ */
 class LoginService
 {
+    /**
+     *
+     */
     const REFRESH_TOKEN = 'refreshToken';
 
+    /**
+     * @var \Illuminate\Auth\AuthManager|mixed
+     */
     private $auth;
+    /**
+     * @var mixed
+     */
     private $cookie;
+    /**
+     * @var \Illuminate\Database\DatabaseManager|mixed
+     */
     private $db;
+    /**
+     * @var mixed
+     */
     private $request;
+    /**
+     * @var LoginRepositoryInterface
+     */
     private $loginRepository;
 
+    /**
+     * LoginService constructor.
+     *
+     * @param Application              $app
+     * @param LoginRepositoryInterface $loginRepository
+     */
     public function __construct(Application $app, LoginRepositoryInterface $loginRepository)
     {
         $this->loginRepository = $loginRepository;
 
-        $this->auth        = $app->make('auth');
-        $this->cookie      = $app->make('cookie');
-        $this->db          = $app->make('db');
-        $this->request     = $app->make('request');
+        $this->auth    = $app->make('auth');
+        $this->cookie  = $app->make('cookie');
+        $this->db      = $app->make('db');
+        $this->request = $app->make('request');
     }
 
     /**
@@ -62,6 +90,14 @@ class LoginService
         return $this->proxy(new Proxy, 'refresh_token', $refreshToken);
     }
 
+    /**
+     * @param       $proxy
+     * @param       $grantType
+     * @param array $data
+     * @param array $param
+     *
+     * @return array
+     */
     public function proxy($proxy, $grantType, array $data = [], array $param = []): array
     {
         return $proxy($grantType, $data, $param);
@@ -75,12 +111,7 @@ class LoginService
     {
         $accessToken = $this->auth->user()->token();
 
-        $refreshToken = $this->db
-            ->table('oauth_refresh_tokens')
-            ->where('access_token_id', $accessToken->id)
-            ->update([
-                'revoked' => true,
-            ]);
+        $refreshToken = $this->loginRepository->logout($accessToken->id);
 
         $accessToken->revoke();
 

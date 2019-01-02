@@ -11,8 +11,7 @@
 |
 */
 
-if (config('password.routes.web.active')) {
-    //Route::prefix('passerby')->group(function() {
-    //    Route::get('/', 'PasserbyController@index');
-    //});
-}
+
+Route::prefix('passerby')->group(function () {
+    //Route::get('/', 'PasserbyController@index');
+});

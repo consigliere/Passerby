@@ -20,7 +20,7 @@ class Proxy
     /**
      * Proxy a request to the OAuth server.
      *
-     * @param $grantType
+     * @param       $grantType
      * @param array $data
      * @param array $param
      *
@@ -28,7 +28,7 @@ class Proxy
      */
     public function __invoke($grantType, array $data = [], array $param = []): array
     {
-        $init = $this->initialization();
+        $init = $this->init();
 
         $data  = array_merge($data, $this->clientCredential($grantType));
         $proxy = json_decode($this->proxyResponse($init['apiconsumer'], $data));
@@ -50,7 +50,10 @@ class Proxy
         ];
     }
 
-    private function initialization(): array
+    /**
+     * @return array
+     */
+    private function init(): array
     {
         $apiConsumer = App::make('apiconsumer');
         $cookie      = App::make('cookie');

@@ -15,11 +15,8 @@ use App\Components\Passerby\Services\Login\LoginService\Proxy;
  * Class LoginService
  * @package App\Components\Passerby\Services
  */
-class LoginService
+class LoginService extends Service
 {
-    /**
-     *
-     */
     const REFRESH_TOKEN = 'refreshToken';
 
     /**
@@ -73,7 +70,12 @@ class LoginService
         $credential = ['username' => $email, 'password' => $password];
 
         if ($user !== null) {
-            return $this->proxy(new Proxy, 'password', $credential);
+            $proxy = $this->proxy(new Proxy, 'password', $credential);
+
+            # Info
+            $this->fireLog('info', 'User ' . $user->name . ' with ID ' . $user->id . ' has been successfully login.');
+
+            return $proxy;
         }
 
         throw new InvalidCredentialsException();
@@ -86,6 +88,9 @@ class LoginService
     public function attemptRefresh(): array
     {
         $refreshToken = ['refresh_token' => $this->request->cookie(self::REFRESH_TOKEN)];
+
+        # Info
+        $this->fireLog('info', 'Access Token refreshed');
 
         return $this->proxy(new Proxy, 'refresh_token', $refreshToken);
     }
@@ -111,10 +116,16 @@ class LoginService
     {
         $accessToken = $this->auth->user()->token();
 
+        $usertoken = $accessToken;
+
         $refreshToken = $this->loginRepository->logout($accessToken->id);
 
         $accessToken->revoke();
 
         $this->cookie->queue($this->cookie->forget(self::REFRESH_TOKEN));
+
+        # Info
+        $this->fireLog('info', 'User with ID ' . $usertoken->user_id . ' using access token with ID ' .
+            $usertoken->id . ' has been successfully logs out');
     }
 }

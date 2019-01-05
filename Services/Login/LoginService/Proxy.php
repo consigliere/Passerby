@@ -18,8 +18,6 @@ class Proxy
     const REFRESH_TOKEN = 'refreshToken';
 
     /**
-     * Proxy a request to the OAuth server.
-     *
      * @param       $grantType
      * @param array $data
      * @param array $param

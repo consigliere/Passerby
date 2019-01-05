@@ -43,8 +43,8 @@ class LoginService extends Service
     /**
      * LoginService constructor.
      *
-     * @param Application              $app
-     * @param LoginRepositoryInterface $loginRepository
+     * @param \Illuminate\Foundation\Application                             $app
+     * @param \App\Components\Passerby\Repositories\LoginRepositoryInterface $loginRepository
      */
     public function __construct(Application $app, LoginRepositoryInterface $loginRepository)
     {
@@ -57,10 +57,8 @@ class LoginService extends Service
     }
 
     /**
-     * Attempt to create an access token using user credentials
-     *
-     * @param string $email
-     * @param string $password
+     * @param $email
+     * @param $password
      *
      * @return array
      */
@@ -82,8 +80,7 @@ class LoginService extends Service
     }
 
     /**
-     * Attempt to refresh the access token used a refresh token that
-     * has been saved in a cookie
+     * @return array
      */
     public function attemptRefresh(): array
     {
@@ -109,8 +106,7 @@ class LoginService extends Service
     }
 
     /**
-     * Logs out the user. Revoke access token and refresh token.
-     * Also instruct the client to forget the refresh cookie.
+     * @return void
      */
     public function logout(): void
     {

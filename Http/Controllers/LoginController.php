@@ -13,7 +13,7 @@ use App\Components\Passerby\Services\LoginService;
 
 /**
  * Class LoginController
- * @package App\Components\Passerby\Http\Controllers\OAuth\Password
+ * @package App\Components\Passerby\Http\Controllers
  */
 class LoginController extends Controller
 {

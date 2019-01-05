@@ -13,6 +13,10 @@ use App\Components\Signature\Http\Controllers\SignatureController as BaseControl
 use App\Components\Signal\Shared\Signal;
 use App\Components\Signal\Shared\ErrorLog;
 
+/**
+ * Class Controller
+ * @package App\Components\Passerby\Http\Controllers
+ */
 abstract class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests, Signal, ErrorLog;

@@ -18,9 +18,6 @@ use Illuminate\Support\Facades\DB;
  */
 class LoginRepository extends Repository implements LoginRepositoryInterface
 {
-    /**
-     * @var
-     */
     private $userCfg;
 
     /**

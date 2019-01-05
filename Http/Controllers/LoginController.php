@@ -25,7 +25,7 @@ class LoginController extends Controller
     /**
      * LoginController constructor.
      *
-     * @param LoginService $loginService
+     * @param \App\Components\Passerby\Services\LoginService $loginService
      */
     public function __construct(LoginService $loginService)
     {
@@ -37,7 +37,7 @@ class LoginController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request): \Illuminate\Http\JsonResponse
     {
         $email    = $request->input('email');
         $password = $request->input('password');
@@ -55,13 +55,11 @@ class LoginController extends Controller
     }
 
     /**
-     * Request new access token
+     * @param \Illuminate\Http\Request $request
      *
-     * @param Request $request
-     *
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function refresh(Request $request)
+    public function refresh(Request $request): \Illuminate\Http\JsonResponse
     {
         try {
             $data = $this->loginService->attemptRefresh();
@@ -76,10 +74,9 @@ class LoginController extends Controller
     }
 
     /**
-     * Logs out authenticated user
-     * @return mixed
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function logout()
+    public function logout(): \Illuminate\Http\JsonResponse
     {
         try {
             $this->loginService->logout();

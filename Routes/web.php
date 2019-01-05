@@ -12,6 +12,6 @@
 */
 
 
-Route::prefix('passerby')->group(function () {
-    //Route::get('/', 'PasserbyController@index');
-});
+//Route::prefix('passerby')->group(function () {
+//    Route::get('/', 'PasserbyController@index');
+//});

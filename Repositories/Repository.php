@@ -10,6 +10,10 @@ use App\Components\Signature\Repositories\SignatureRepository as BaseRepository;
 use App\Components\Signal\Shared\Signal;
 use App\Components\Signal\Shared\ErrorLog;
 
+/**
+ * Class Repository
+ * @package App\Components\Passerby\Repositories
+ */
 abstract class Repository extends BaseRepository
 {
     use Signal, ErrorLog;

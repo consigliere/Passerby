@@ -32,14 +32,10 @@ class Proxy
         $proxy = json_decode($this->proxyResponse($init['apiconsumer'], $data));
 
         // Create a refresh token cookie
+        // 864000 value will make the cookies expire in 10 days
         $init['cookie']->queue(
-            self::REFRESH_TOKEN,
-            $proxy->refresh_token,
-            864000, // 10 days
-            null,
-            null,
-            false,
-            true // HttpOnly
+            self::REFRESH_TOKEN, $proxy->refresh_token, 864000, null, null, false,
+            true // httpOnly == true
         );
 
         return [

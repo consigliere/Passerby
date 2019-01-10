@@ -73,8 +73,8 @@ class LoginService extends Service
         if ($user !== null) {
             $proxy = $this->proxy(new Proxy, 'password', $credential);
 
-            # Info Log
-            $this->fireLog('info', 'User ' . $user->name . ' with ID ' . $user->id . ' has been successfully login.');
+            # Log Info
+            $this->fireLog('info', 'Login@ User ' . $user->name . ' with ID ' . $user->id . ' has been successfully login.');
 
             return $proxy;
         }
@@ -90,7 +90,7 @@ class LoginService extends Service
         $refreshToken = ['refresh_token' => $this->request->cookie(self::REFRESH_TOKEN)];
 
         # Info
-        $this->fireLog('info', 'Access Token refreshed');
+        $this->fireLog('info', 'Refresh@ Access Token refreshed');
 
         return $this->proxy(new Proxy, 'refresh_token', $refreshToken);
     }
@@ -109,7 +109,7 @@ class LoginService extends Service
         $this->cookie->queue($this->cookie->forget(self::REFRESH_TOKEN));
 
         # Info
-        $this->fireLog('info', 'User with ID ' . $usertoken->user_id . ' using access token with ID ' .
+        $this->fireLog('info', 'Logout@ User with ID ' . $usertoken->user_id . ' using access token with ID ' .
             $usertoken->id . ' has been successfully logs out');
     }
 }

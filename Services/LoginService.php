@@ -10,6 +10,7 @@ use Illuminate\Foundation\Application;
 use App\Components\Passerby\Exceptions\InvalidCredentialsException;
 use App\Components\Passerby\Repositories\LoginRepositoryInterface;
 use App\Components\Passerby\Services\Login\LoginService\Proxy;
+use App\Components\Passerby\Services\Login\Shared\LoginCallable;
 
 /**
  * Class LoginService
@@ -17,6 +18,8 @@ use App\Components\Passerby\Services\Login\LoginService\Proxy;
  */
 class LoginService extends Service
 {
+    use LoginCallable;
+
     const REFRESH_TOKEN = 'refreshToken';
 
     /**
@@ -70,7 +73,7 @@ class LoginService extends Service
         if ($user !== null) {
             $proxy = $this->proxy(new Proxy, 'password', $credential);
 
-            # Info
+            # Info Log
             $this->fireLog('info', 'User ' . $user->name . ' with ID ' . $user->id . ' has been successfully login.');
 
             return $proxy;
@@ -93,27 +96,12 @@ class LoginService extends Service
     }
 
     /**
-     * @param       $proxy
-     * @param       $grantType
-     * @param array $data
-     * @param array $param
-     *
-     * @return array
-     */
-    public function proxy($proxy, $grantType, array $data = [], array $param = []): array
-    {
-        return $proxy($grantType, $data, $param);
-    }
-
-    /**
      * @return void
      */
     public function logout(): void
     {
-        $accessToken = $this->auth->user()->token();
-
-        $usertoken = $accessToken;
-
+        $accessToken  = $this->auth->user()->token();
+        $usertoken    = $accessToken;
         $refreshToken = $this->loginRepository->logout($accessToken->id);
 
         $accessToken->revoke();

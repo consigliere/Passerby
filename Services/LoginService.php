@@ -1,16 +1,22 @@
 <?php
 /**
+ * Copyright(c) 2019. All rights reserved.
+ * Last modified 2/28/19 6:16 AM
+ */
+
+/**
  * LoginService.php
  * Created by @anonymoussc on 10/25/2017 4:18 AM.
  */
 
 namespace App\Components\Passerby\Services;
 
-use Illuminate\Foundation\Application;
 use App\Components\Passerby\Exceptions\InvalidCredentialsException;
 use App\Components\Passerby\Repositories\LoginRepositoryInterface;
 use App\Components\Passerby\Services\Login\LoginService\Proxy;
 use App\Components\Passerby\Services\Login\Shared\LoginCallable;
+use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Event;
 
 /**
  * Class LoginService
@@ -60,21 +66,18 @@ class LoginService extends Service
     }
 
     /**
-     * @param $email
+     * @param $username
      * @param $password
      *
      * @return array
      */
-    public function attemptLogin($email, $password): array
+    public function attemptLogin($username, $password): array
     {
-        $user       = $this->loginRepository->getWhere('email', $email)->first();
-        $credential = ['username' => $email, 'password' => $password];
+        $user = $this->loginRepository->getUserByUsernameOrEmail($username)->first();
 
         if ($user !== null) {
-            $proxy = $this->proxy(new Proxy, 'password', $credential);
-
-            # Log Info
-            $this->fireLog('info', 'Login@ User ' . $user->name . ' with ID ' . $user->id . ' has been successfully login.');
+            $proxy = $this->proxy(new Proxy, 'password', ['username' => $username, 'password' => $password]);
+            Event::fire('login.message', [['username' => $user->name, 'userid' => $user->id]]);
 
             return $proxy;
         }
@@ -87,12 +90,11 @@ class LoginService extends Service
      */
     public function attemptRefresh(): array
     {
-        $refreshToken = ['refresh_token' => $this->request->cookie(self::REFRESH_TOKEN)];
+        Event::fire('login.refresh');
 
-        # Info
-        $this->fireLog('info', 'Refresh@ Access Token refreshed');
-
-        return $this->proxy(new Proxy, 'refresh_token', $refreshToken);
+        return $this->proxy(new Proxy, 'refresh_token',
+            ['refresh_token' => $this->request->cookie(self::REFRESH_TOKEN)]
+        );
     }
 
     /**
@@ -108,8 +110,6 @@ class LoginService extends Service
 
         $this->cookie->queue($this->cookie->forget(self::REFRESH_TOKEN));
 
-        # Info
-        $this->fireLog('info', 'Logout@ User with ID ' . $usertoken->user_id . ' using access token with ID ' .
-            $usertoken->id . ' has been successfully logs out');
+        Event::fire('login.logout', [['userid' => $usertoken->user_id, 'usertokenid' => $usertoken->id]]);
     }
 }

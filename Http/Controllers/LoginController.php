@@ -1,15 +1,20 @@
 <?php
 /**
+ * Copyright(c) 2019. All rights reserved.
+ * Last modified 2/28/19 6:16 AM
+ */
+
+/**
  * LoginController.php
  * Created by @anonymoussc on 10/31/2018 12:28 PM.
  */
 
 namespace App\Components\Passerby\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
 use App\Components\Passerby\Requests\LoginRequest;
 use App\Components\Passerby\Services\LoginService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
 /**
  * Class LoginController
@@ -39,11 +44,11 @@ class LoginController extends Controller
      */
     public function login(LoginRequest $request): \Illuminate\Http\JsonResponse
     {
-        $email    = $request->input('email');
+        $username = $request->input('username');
         $password = $request->input('password');
 
         try {
-            $data = $this->loginService->attemptLogin($email, $password);
+            $data = $this->loginService->attemptLogin($username, $password);
         } catch (\Exception $error) {
             $this->fireLog('error', $error->getMessage(), ['error' => $error]);
 

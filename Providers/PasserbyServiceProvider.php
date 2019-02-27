@@ -1,10 +1,15 @@
 <?php
+/**
+ * Copyright(c) 2019. All rights reserved.
+ * Last modified 2/28/19 6:16 AM
+ */
 
 namespace App\Components\Passerby\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Factory;
+use App\Components\Passerby\Listeners\LoginMessageEventSubscriber;
 use App\Components\Passerby\Repositories\Login\LoginRepository;
+use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Support\ServiceProvider;
 
 class PasserbyServiceProvider extends ServiceProvider
 {
@@ -27,6 +32,9 @@ class PasserbyServiceProvider extends ServiceProvider
         $this->registerViews();
         $this->registerFactories();
         $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+
+        $dispatcher = $this->app->make('events');
+        $dispatcher->subscribe(LoginMessageEventSubscriber::class);
     }
 
     /**

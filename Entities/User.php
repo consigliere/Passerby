@@ -1,17 +1,50 @@
 <?php
+/**
+ * Copyright(c) 2019. All rights reserved.
+ * Last modified 2/28/19 6:16 AM
+ */
 
 namespace App\Components\Passerby\Entities;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
 
 /**
  * Class User
  * @package App\Components\Passerby\Entities
  */
-class User extends Model
+class User extends Authenticatable
 {
+    use HasApiTokens, Notifiable;
+
     /**
+     * The attributes that are mass assignable.
+     *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable
+        = [
+            'uuid', 'username', 'name', 'email', 'password',
+        ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden
+        = [
+            'password', 'remember_token',
+        ];
+
+    /**
+     * @param $identifier
+     *
+     * @return mixed
+     */
+    public function findForPassport($identifier)
+    {
+        return $this->orWhere('username', $identifier)->orWhere('email', $identifier)->first();
+    }
 }

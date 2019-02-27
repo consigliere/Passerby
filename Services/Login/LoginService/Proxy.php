@@ -1,13 +1,18 @@
 <?php
 /**
+ * Copyright(c) 2019. All rights reserved.
+ * Last modified 2/28/19 6:16 AM
+ */
+
+/**
  * Proxy.php
  * Created by @anonymoussc on 01/01/2019 6:20 AM.
  */
 
 namespace App\Components\Passerby\Services\Login\LoginService;
 
-use Illuminate\Support\Facades\App;
 use App\Components\Passerby\Exceptions\InvalidCredentialsException;
+use Illuminate\Support\Facades\App;
 
 /**
  * Class Proxy

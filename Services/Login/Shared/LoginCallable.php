@@ -1,11 +1,15 @@
 <?php
 /**
+ * Copyright(c) 2019. All rights reserved.
+ * Last modified 2/28/19 2:25 AM
+ */
+
+/**
  * LoginCallable.php
  * Created by @anonymoussc on 01/10/2019 6:11 AM.
  */
 
 namespace App\Components\Passerby\Services\Login\Shared;
-
 
 /**
  * Trait LoginCallable

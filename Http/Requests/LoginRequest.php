@@ -1,5 +1,10 @@
 <?php
 /**
+ * Copyright(c) 2019. All rights reserved.
+ * Last modified 2/27/19 5:27 PM
+ */
+
+/**
  * LoginRequest.php
  * Created by @anonymoussc on 10/22/2017 1:28 AM.
  */
@@ -18,8 +23,8 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'    => 'required|email',
-            'password' => 'required'
+            'username' => 'required',
+            'password' => 'required',
         ];
     }
 }

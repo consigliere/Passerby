@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 2/28/19 3:54 AM
+ * Last modified 3/21/19 5:36 AM
  */
 
 /**
@@ -12,6 +12,7 @@
 namespace App\Components\Passerby\Listeners;
 
 use App\Components\Signal\Shared\Signal;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Class LoginEventSubscriber
@@ -33,12 +34,11 @@ class LoginMessageEventSubscriber
 
 
     /**
-     * @param array $user
+     * @param array $user ['username'], $user['userid']
      */
     public function onLoginMessage(array $user): void
     {
-        $this->fireLog('info', 'Login@ User ' . $user['username'] . ' with ID ' . $user['userid'] .
-            ' has been successfully login.');
+        $this->fireLog('info', Config::get('password.log.info.login.message') . ' @UserID: ' . $user['userid']);
     }
 
     /**
@@ -46,16 +46,15 @@ class LoginMessageEventSubscriber
      */
     public function onRefreshMessage(): void
     {
-        $this->fireLog('info', 'Refresh@ Access Token refreshed');
+        $this->fireLog('info', Config::get('password.log.info.refresh.message'));
     }
 
 
     /**
-     * @param array $user
+     * @param array $user ['userid'], $user['usertokenid']
      */
     public function onLogoutMessage(array $user): void
     {
-        $this->fireLog('info', 'Logout@ User with ID ' . $user['userid'] . ' using access token with ID ' . $user['usertokenid'] .
-            ' has been successfully logs out');
+        $this->fireLog('info', Config::get('password.log.info.logout.message') . ' @UserID: ' . $user['userid']);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 3/20/19 11:56 AM
+ * Last modified 3/20/19 8:44 PM
  */
 
 /**
@@ -82,7 +82,7 @@ class LoginService extends Service
         if ($user !== null) {
             $proxy = $this->proxy(new Proxy, 'password', ['username' => $username, 'password' => $password]);
 
-            if (Config::get('password.message.notification.login')) {
+            if (Config::get('password.log.info.login.active')) {
                 Event::fire('login.message', [['username' => $user->name, 'userid' => $user->id]]);
             }
 
@@ -109,7 +109,7 @@ class LoginService extends Service
 
         $proxy = $this->proxy(new Proxy, 'refresh_token', ['refresh_token' => $token]);
 
-        if (Config::get('password.message.notification.refresh')) {
+        if (Config::get('password.log.info.refresh.active')) {
             Event::fire('login.refresh');
         }
 
@@ -129,7 +129,7 @@ class LoginService extends Service
 
         $this->cookie->queue($this->cookie->forget(self::REFRESH_TOKEN));
 
-        if (Config::get('password.message.notification.logout')) {
+        if (Config::get('password.log.info.logout.active')) {
             Event::fire('login.logout', [['userid' => $usertoken->user_id, 'usertokenid' => $usertoken->id]]);
         }
     }

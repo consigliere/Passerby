@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 3/20/19 11:03 AM
+ * Last modified 3/21/19 5:28 AM
  */
 
 return [
@@ -12,11 +12,20 @@ return [
             'expire'   => 864000 // 864000 value will make the cookies expire in 10 days
         ],
     ],
-    'message'      => [
-        'notification' => [
-            'login'   => false,
-            'refresh' => false,
-            'logout'  => false,
+    'log'          => [ // log info into database, default into signal_log table
+        'info' => [
+            'login'   => [
+                'active'  => false,
+                'message' => 'User has successfully login.',
+            ],
+            'refresh' => [
+                'active'  => false,
+                'message' => 'Token refreshed.',
+            ],
+            'logout'  => [
+                'active'  => false,
+                'message' => 'User has successfully logout.',
+            ],
         ],
     ],
     'client'       => [

@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 3/20/19 11:00 AM
+ * Last modified 3/20/19 11:54 AM
  */
 
 namespace App\Components\Passerby\Providers;
@@ -62,7 +62,7 @@ class PasserbyServiceProvider extends ServiceProvider
     protected function registerConfig()
     {
         $this->publishes([
-            __DIR__ . '/../Config/config.php' => config_path('password-oauth.php'),
+            __DIR__ . '/../Config/config.php' => config_path('password.php'),
         ], 'config');
         $this->mergeConfigFrom(
             __DIR__ . '/../Config/config.php', 'password'

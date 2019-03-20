@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 2/28/19 6:16 AM
+ * Last modified 3/20/19 11:07 AM
  */
 
 /**
@@ -16,6 +16,7 @@ use App\Components\Passerby\Repositories\LoginRepositoryInterface;
 use App\Components\Passerby\Services\Login\LoginService\Proxy;
 use App\Components\Passerby\Services\Login\Shared\LoginCallable;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Event;
 
 /**
@@ -26,6 +27,9 @@ class LoginService extends Service
 {
     use LoginCallable;
 
+    /**
+     *
+     */
     const REFRESH_TOKEN = 'refreshToken';
 
     /**
@@ -77,7 +81,10 @@ class LoginService extends Service
 
         if ($user !== null) {
             $proxy = $this->proxy(new Proxy, 'password', ['username' => $username, 'password' => $password]);
-            Event::fire('login.message', [['username' => $user->name, 'userid' => $user->id]]);
+
+            if (Config::get('message.notification.login')) {
+                Event::fire('login.message', [['username' => $user->name, 'userid' => $user->id]]);
+            }
 
             return $proxy;
         }
@@ -86,15 +93,27 @@ class LoginService extends Service
     }
 
     /**
+     * @param array $param
+     *
      * @return array
      */
-    public function attemptRefresh(): array
+    public function attemptRefresh(array $param = []): array
     {
-        Event::fire('login.refresh');
+        $token = (
+            (!Config::get('password.refreshToken.cookie.httpOnly.')) &&
+            (true === isset($param['refresh_token'])) &&
+            ($param['refresh_token'] !== '')
+        )
+            ? $param['refresh_token']
+            : $this->request->cookie(self::REFRESH_TOKEN);
 
-        return $this->proxy(new Proxy, 'refresh_token',
-            ['refresh_token' => $this->request->cookie(self::REFRESH_TOKEN)]
-        );
+        $proxy = $this->proxy(new Proxy, 'refresh_token', ['refresh_token' => $token]);
+
+        if (Config::get('message.notification.refresh')) {
+            Event::fire('login.refresh');
+        }
+
+        return $proxy;
     }
 
     /**
@@ -110,6 +129,8 @@ class LoginService extends Service
 
         $this->cookie->queue($this->cookie->forget(self::REFRESH_TOKEN));
 
-        Event::fire('login.logout', [['userid' => $usertoken->user_id, 'usertokenid' => $usertoken->id]]);
+        if (Config::get('message.notification.logout')) {
+            Event::fire('login.logout', [['userid' => $usertoken->user_id, 'usertokenid' => $usertoken->id]]);
+        }
     }
 }

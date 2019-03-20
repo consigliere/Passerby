@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 2/28/19 6:16 AM
+ * Last modified 3/20/19 11:00 AM
  */
 
 /**
@@ -13,6 +13,7 @@ namespace App\Components\Passerby\Services\Login\LoginService;
 
 use App\Components\Passerby\Exceptions\InvalidCredentialsException;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Class Proxy
@@ -20,7 +21,34 @@ use Illuminate\Support\Facades\App;
  */
 class Proxy
 {
+    /**
+     * @const
+     */
     const REFRESH_TOKEN = 'refreshToken';
+
+    /**
+     * @var
+     */
+    private $appCookie;
+    /**
+     * @var
+     */
+    private $apiConsumer;
+    /**
+     * @var bool
+     */
+    private $httpOnly;
+
+    /**
+     * Proxy constructor.
+     */
+    public function __construct()
+    {
+        $this->apiConsumer = App::make('apiconsumer');
+        $this->appCookie   = App::make('cookie');
+
+        $this->httpOnly = (boolean)Config::get('password.refreshToken.cookie.httpOnly');
+    }
 
     /**
      * @param       $grantType
@@ -31,33 +59,18 @@ class Proxy
      */
     public function __invoke($grantType, array $data = [], array $param = []): array
     {
-        $init = $this->init();
-
         $data  = array_merge($data, $this->clientCredential($grantType));
-        $proxy = json_decode($this->proxyResponse($init['apiconsumer'], $data));
+        $proxy = json_decode($this->proxyResponse($data));
 
-        // Create a refresh token cookie
-        // 864000 value will make the cookies expire in 10 days
-        $init['cookie']->queue(
-            self::REFRESH_TOKEN, $proxy->refresh_token, 864000, null, null, false,
-            true // httpOnly == true
-        );
+        $token['access_token'] = $proxy->access_token;
 
-        return [
-            'access_token' => $proxy->access_token,
-            'expires_in'   => $proxy->expires_in,
-        ];
-    }
+        $this->httpOnly
+            ? $this->setCookieWith($proxy->refresh_token)
+            : $token['refresh_token'] = $proxy->refresh_token;
 
-    /**
-     * @return array
-     */
-    private function init(): array
-    {
-        $apiConsumer = App::make('apiconsumer');
-        $cookie      = App::make('cookie');
+        $token['expires_in'] = $proxy->expires_in;
 
-        return ['apiconsumer' => $apiConsumer, 'cookie' => $cookie];
+        return $token;
     }
 
     /**
@@ -68,26 +81,44 @@ class Proxy
     private function clientCredential($type): array
     {
         return [
-            'client_id'     => env('PASSWORD_CLIENT_ID'),
-            'client_secret' => env('PASSWORD_CLIENT_SECRET'),
+            'client_id'     => Config::get('password.client.id'),
+            'client_secret' => Config::get('password.client.secret'),
             'grant_type'    => $type,
         ];
     }
 
     /**
-     * @param $apiconsumer
      * @param $data
      *
      * @return mixed
      */
-    private function proxyResponse($apiconsumer, $data)
+    private function proxyResponse($data)
     {
-        $response = $apiconsumer->post('/oauth/token', $data);
+        $response = $this->apiConsumer->post('/oauth/token', $data);
 
         if (!$response->isSuccessful()) {
             throw new InvalidCredentialsException();
         }
 
         return $response->getContent();
+    }
+
+    /**
+     * @param $refreshToken
+     */
+    private function setCookieWith($refreshToken): void
+    {
+        $expire = (int)Config::get('password.refreshToken.cookie.expire');
+
+        // Create a refresh token cookie
+        $this->appCookie->queue(
+            self::REFRESH_TOKEN,
+            $refreshToken,
+            $expire,
+            null,
+            null,
+            false,
+            $this->httpOnly
+        );
     }
 }

@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 2/28/19 6:16 AM
+ * Last modified 3/20/19 10:13 AM
  */
 
 /**
@@ -67,7 +67,11 @@ class LoginController extends Controller
     public function refresh(Request $request): \Illuminate\Http\JsonResponse
     {
         try {
-            $data = $this->loginService->attemptRefresh();
+            $refresh = $request->has('refreshToken')
+                ? ['refresh_token' => $request->refreshToken]
+                : [];
+
+            $data = $this->loginService->attemptRefresh($refresh);
         } catch (\Exception $error) {
             $this->fireLog('error', $error->getMessage(), ['error' => $error]);
 

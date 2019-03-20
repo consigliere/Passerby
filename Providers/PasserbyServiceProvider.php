@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 2/28/19 6:16 AM
+ * Last modified 3/20/19 11:00 AM
  */
 
 namespace App\Components\Passerby\Providers;
@@ -49,7 +49,7 @@ class PasserbyServiceProvider extends ServiceProvider
         $this->app->register(\App\Components\Signature\Providers\SignatureServiceProvider::class);
         $this->app->register(\App\Components\Signal\Providers\SignalServiceProvider::class);
 
-        $this->app->bind(\App\Components\Passerby\Repositories\LoginRepositoryInterface::class, function ($app) {
+        $this->app->bind(\App\Components\Passerby\Repositories\LoginRepositoryInterface::class, function($app) {
             return new LoginRepository();
         });
     }
@@ -62,10 +62,10 @@ class PasserbyServiceProvider extends ServiceProvider
     protected function registerConfig()
     {
         $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('password.php'),
+            __DIR__ . '/../Config/config.php' => config_path('password-oauth.php'),
         ], 'config');
         $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'password'
+            __DIR__ . '/../Config/config.php', 'password'
         );
     }
 
@@ -78,13 +78,13 @@ class PasserbyServiceProvider extends ServiceProvider
     {
         $viewPath = resource_path('views/modules/passerby');
 
-        $sourcePath = __DIR__.'/../Resources/views';
+        $sourcePath = __DIR__ . '/../Resources/views';
 
         $this->publishes([
-            $sourcePath => $viewPath
-        ],'views');
+            $sourcePath => $viewPath,
+        ], 'views');
 
-        $this->loadViewsFrom(array_merge(array_map(function ($path) {
+        $this->loadViewsFrom(array_merge(array_map(function($path) {
             return $path . '/modules/passerby';
         }, \Config::get('view.paths')), [$sourcePath]), 'passerby');
     }
@@ -101,18 +101,18 @@ class PasserbyServiceProvider extends ServiceProvider
         if (is_dir($langPath)) {
             $this->loadTranslationsFrom($langPath, 'passerby');
         } else {
-            $this->loadTranslationsFrom(__DIR__ .'/../Resources/lang', 'passerby');
+            $this->loadTranslationsFrom(__DIR__ . '/../Resources/lang', 'passerby');
         }
     }
 
     /**
      * Register an additional directory of factories.
-     * 
+     *
      * @return void
      */
     public function registerFactories()
     {
-        if (! app()->environment('production')) {
+        if (!app()->environment('production')) {
             app(Factory::class)->load(__DIR__ . '/../Database/factories');
         }
     }

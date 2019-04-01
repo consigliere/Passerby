@@ -1,32 +1,31 @@
 {
-    "name": "consigliere/passerby",
-    "description": "",
-    "authors": [
-        {
-            "name": "anonymoussc",
-            "email": "50c5ac69@opayq.com"
-        }
-    ],
-    "extra": {
-        "laravel": {
-            "providers": [
-                "App\\Components\\Passerby\\Providers\\PasserbyServiceProvider"
-            ],
-            "aliases": {
-                
-            }
-        }
-    },
-    "autoload": {
-        "psr-4": {
-            "App\\Components\\Passerby\\": ""
-        }
-    },
-    "require"    : {
-        "illuminate/support"       : "5.8.*",
-        "illuminate/contracts"     : "5.8.*",
-        "laravel/passport"         : "^7.0",
-        "consigliere/signature"    : "0.9.*",
-        "consigliere/signal"       : "0.10.*"
+  "name"       : "consigliere/passerby",
+  "description": "",
+  "authors"    : [
+    {
+      "name" : "anonymoussc",
+      "email": "50c5ac69@opayq.com"
     }
+  ],
+  "extra"      : {
+    "laravel": {
+      "providers": [
+        "App\\Components\\Passerby\\Providers\\PasserbyServiceProvider"
+      ],
+      "aliases"  : {
+      }
+    }
+  },
+  "autoload"   : {
+    "psr-4": {
+      "App\\Components\\Passerby\\": ""
+    }
+  },
+  "require"    : {
+    "illuminate/support"   : "5.8.*",
+    "illuminate/contracts" : "5.8.*",
+    "laravel/passport"     : "^7.0",
+    "consigliere/signature": "0.9.*",
+    "consigliere/signal"   : "0.10.*"
+  }
 }

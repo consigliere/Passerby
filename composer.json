@@ -23,8 +23,8 @@
         }
     },
     "require"    : {
-        "illuminate/support"       : "5.7.*",
-        "illuminate/contracts"     : "5.7.*",
+        "illuminate/support"       : "5.8.*",
+        "illuminate/contracts"     : "5.8.*",
         "laravel/passport"         : "^7.0",
         "consigliere/signature"    : "0.8.*",
         "consigliere/signal"       : "0.9.*"

@@ -1,6 +1,8 @@
 <?php
-
-use Illuminate\Http\Request;
+/**
+ * Copyright(c) 2019. All rights reserved.
+ * Last modified 4/15/19 8:47 AM
+ */
 
 /*
 |--------------------------------------------------------------------------
@@ -12,17 +14,6 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-//Route::middleware('auth:api')->get('/passerby', function (Request $request) {
-//    return $request->user();
-//});
-
-Route::group(['prefix' => 'v1'], function () {
-//    Route::group(['middleware' => 'auth:api', 'prefix' => '', 'namespace' => '\App\Components\Passerby\Http\Controllers'], function () {
-//        Route::get('/intest', 'LoginController@inTests');
-//        Route::get('/outest', 'LoginController@authTests');
-//    });
-});
 
 Route::group(['middleware' => 'api', 'prefix' => 'login', 'namespace' => '\App\Components\Passerby\Http\Controllers'], function () {
     Route::post('/', 'LoginController@login');

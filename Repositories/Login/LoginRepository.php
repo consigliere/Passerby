@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 2/28/19 6:16 AM
+ * Last modified 4/22/19 2:22 PM
  */
 
 /**
@@ -12,10 +12,12 @@
 namespace App\Components\Passerby\Repositories\Login;
 
 use App\Components\Passerby\Entities\User;
-use App\Components\Passerby\Repositories\LoginRepositoryInterface;
-use App\Components\Passerby\Repositories\Repository;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
+use App\Components\Passerby\Repositories\{
+    LoginRepositoryInterface, Repository
+};
+use Illuminate\Support\Facades\{
+    Config, DB
+};
 use Webpatser\Uuid\Uuid;
 
 /**

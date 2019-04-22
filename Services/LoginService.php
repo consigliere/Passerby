@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 3/20/19 8:44 PM
+ * Last modified 4/22/19 2:24 PM
  */
 
 /**
@@ -27,9 +27,6 @@ class LoginService extends Service
 {
     use LoginCallable;
 
-    /**
-     *
-     */
     const REFRESH_TOKEN = 'refreshToken';
 
     /**
@@ -83,7 +80,7 @@ class LoginService extends Service
             $proxy = $this->proxy(new Proxy, 'password', ['username' => $username, 'password' => $password]);
 
             if (Config::get('password.log.info.login.active')) {
-                Event::fire('login.message', [['username' => $user->name, 'userid' => $user->id]]);
+                Event::dispatch('login.message', [['username' => $user->name, 'userid' => $user->id]]);
             }
 
             return $proxy;
@@ -110,7 +107,7 @@ class LoginService extends Service
         $proxy = $this->proxy(new Proxy, 'refresh_token', ['refresh_token' => $token]);
 
         if (Config::get('password.log.info.refresh.active')) {
-            Event::fire('login.refresh');
+            Event::dispatch('login.refresh');
         }
 
         return $proxy;
@@ -130,7 +127,7 @@ class LoginService extends Service
         $this->cookie->queue($this->cookie->forget(self::REFRESH_TOKEN));
 
         if (Config::get('password.log.info.logout.active')) {
-            Event::fire('login.logout', [['userid' => $usertoken->user_id, 'usertokenid' => $usertoken->id]]);
+            Event::dispatch('login.logout', [['userid' => $usertoken->user_id, 'usertokenid' => $usertoken->id]]);
         }
     }
 }

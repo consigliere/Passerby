@@ -1,12 +1,17 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 5/15/19 8:29 AM
+ * Last modified 5/15/19 8:47 AM
  */
 
 /**
  * LoginService.php
  * Created by @anonymoussc on 10/25/2017 4:18 AM.
+ */
+
+/**
+ * AuthService.php
+ * @renamed by @anonymoussc on 05/15/2019 8:46 AM.
  */
 
 namespace App\Components\Passerby\Services;
@@ -20,10 +25,10 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Event;
 
 /**
- * Class LoginService
+ * Class AuthService
  * @package App\Components\Passerby\Services
  */
-class LoginService extends Service
+class AuthService extends Service
 {
     use LoginCallable;
 
@@ -51,7 +56,7 @@ class LoginService extends Service
     private $loginRepository;
 
     /**
-     * LoginService constructor.
+     * AuthService constructor.
      *
      * @param \Illuminate\Foundation\Application                             $app
      * @param \App\Components\Passerby\Repositories\LoginRepositoryInterface $loginRepository

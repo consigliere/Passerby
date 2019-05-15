@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 3/20/19 11:00 AM
+ * Last modified 5/15/19 8:29 AM
  */
 
 /**
@@ -9,7 +9,7 @@
  * Created by @anonymoussc on 01/01/2019 6:20 AM.
  */
 
-namespace App\Components\Passerby\Services\Login\LoginService;
+namespace App\Components\Passerby\Services\Login\Service;
 
 use App\Components\Passerby\Exceptions\InvalidCredentialsException;
 use Illuminate\Support\Facades\App;
@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Config;
 
 /**
  * Class Proxy
- * @package App\Components\Passerby\Services\Login\LoginService
+ * @package App\Components\Passerby\Services\Login\Service
  */
 class Proxy
 {

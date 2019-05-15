@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 5/15/19 7:51 AM
+ * Last modified 5/15/19 8:01 AM
  */
 
 /**
@@ -9,15 +9,20 @@
  * Created by @anonymoussc on 10/31/2018 12:28 PM.
  */
 
+/**
+ * AuthController.php
+ * @renamed by @anonymoussc on 05/15/2019 7:55 AM.
+ */
+
 namespace App\Components\Passerby\Http\Controllers;
 
-use App\Components\Passerby\Requests\LoginRequest;
+use App\Components\Passerby\Requests\AuthLoginRequest;
 use App\Components\Passerby\Services\LoginService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 
 /**
- * Class LoginController
+ * Class AuthController
  * @package App\Components\Passerby\Http\Controllers
  */
 class AuthController extends Controller
@@ -38,11 +43,11 @@ class AuthController extends Controller
     }
 
     /**
-     * @param \App\Components\Passerby\Requests\LoginRequest $request
+     * @param \App\Components\Passerby\Requests\AuthLoginRequest $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login(LoginRequest $request): \Illuminate\Http\JsonResponse
+    public function login(AuthLoginRequest $request): \Illuminate\Http\JsonResponse
     {
         $username = $request->input('username');
         $password = $request->input('password');
@@ -85,7 +90,7 @@ class AuthController extends Controller
     /**
      * @return \Illuminate\Http\JsonResponse
      */
-    public function logout(): \Illuminate\Http\JsonResponse
+    public function logout(Request $request): \Illuminate\Http\JsonResponse
     {
         try {
             $this->loginService->logout();

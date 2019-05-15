@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 4/22/19 2:24 PM
+ * Last modified 5/15/19 8:29 AM
  */
 
 /**
@@ -13,7 +13,7 @@ namespace App\Components\Passerby\Services;
 
 use App\Components\Passerby\Exceptions\InvalidCredentialsException;
 use App\Components\Passerby\Repositories\LoginRepositoryInterface;
-use App\Components\Passerby\Services\Login\LoginService\Proxy;
+use App\Components\Passerby\Services\Login\Service\Proxy;
 use App\Components\Passerby\Services\Login\Shared\LoginCallable;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Config;

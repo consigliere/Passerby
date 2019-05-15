@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 4/15/19 8:47 AM
+ * Last modified 5/15/19 8:01 AM
  */
 
 /*
@@ -16,9 +16,9 @@
 */
 
 Route::group(['middleware' => 'api', 'prefix' => 'login', 'namespace' => '\App\Components\Passerby\Http\Controllers'], function () {
-    Route::post('/', 'LoginController@login');
-    Route::post('/refresh', 'LoginController@refresh');
+    Route::post('/', 'AuthController@login');
+    Route::post('/refresh', 'AuthController@refresh');
 });
 Route::group(['middleware' => 'auth:api', 'prefix' => '', 'namespace' => '\App\Components\Passerby\Http\Controllers'], function () {
-    Route::post('/logout', 'LoginController@logout');
+    Route::post('/logout', 'AuthController@logout');
 });

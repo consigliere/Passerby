@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 3/20/19 10:13 AM
+ * Last modified 5/15/19 7:51 AM
  */
 
 /**
@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Response;
  * Class LoginController
  * @package App\Components\Passerby\Http\Controllers
  */
-class LoginController extends Controller
+class AuthController extends Controller
 {
     /**
      * @var \App\Components\Passerby\Services\LoginService

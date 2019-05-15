@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 5/15/19 7:48 AM
+ * Last modified 5/15/19 9:17 AM
  */
 
 /**
@@ -9,7 +9,12 @@
  * Created by @anonymoussc on 11/10/2017 10:35 AM.
  */
 
-namespace App\Components\Passerby\Repositories\Login;
+/**
+ * AuthRepository.php
+ * @renamed by @anonymoussc on 05/15/2019 9:12 AM.
+ */
+
+namespace App\Components\Passerby\Repositories\Auth;
 
 use App\Components\Passerby\Entities\User;
 use App\Components\Passerby\Repositories\LoginRepositoryInterface;
@@ -19,10 +24,10 @@ use Illuminate\Support\Facades\DB;
 use Webpatser\Uuid\Uuid;
 
 /**
- * Class LoginRepository
- * @package App\Components\Passerby\Repositories\Login
+ * Class AuthRepository
+ * @package App\Components\Passerby\Repositories\Auth
  */
-class LoginRepository extends Repository implements LoginRepositoryInterface
+class AuthRepository extends Repository implements LoginRepositoryInterface
 {
     private $userCfg;
 

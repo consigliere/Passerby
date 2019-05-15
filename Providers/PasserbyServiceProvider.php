@@ -1,13 +1,13 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 3/20/19 11:54 AM
+ * Last modified 5/15/19 9:21 AM
  */
 
 namespace App\Components\Passerby\Providers;
 
 use App\Components\Passerby\Listeners\LoginMessageEventSubscriber;
-use App\Components\Passerby\Repositories\Login\LoginRepository;
+use App\Components\Passerby\Repositories\Auth\AuthRepository;
 use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Support\ServiceProvider;
 
@@ -49,8 +49,8 @@ class PasserbyServiceProvider extends ServiceProvider
         $this->app->register(\App\Components\Signature\Providers\SignatureServiceProvider::class);
         $this->app->register(\App\Components\Signal\Providers\SignalServiceProvider::class);
 
-        $this->app->bind(\App\Components\Passerby\Repositories\LoginRepositoryInterface::class, function($app) {
-            return new LoginRepository();
+        $this->app->bind(\App\Components\Passerby\Repositories\AuthRepositoryInterface::class, function($app) {
+            return new AuthRepository();
         });
     }
 

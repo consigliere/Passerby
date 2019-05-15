@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 5/15/19 8:47 AM
+ * Last modified 5/15/19 9:06 AM
  */
 
 /**
@@ -18,8 +18,8 @@ namespace App\Components\Passerby\Services;
 
 use App\Components\Passerby\Exceptions\InvalidCredentialsException;
 use App\Components\Passerby\Repositories\LoginRepositoryInterface;
-use App\Components\Passerby\Services\Login\Service\Proxy;
-use App\Components\Passerby\Services\Login\Shared\LoginCallable;
+use App\Components\Passerby\Services\Auth\Service\Proxy;
+use App\Components\Passerby\Services\Auth\Shared\AuthCallable;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Event;
@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Event;
  */
 class AuthService extends Service
 {
-    use LoginCallable;
+    use AuthCallable;
 
     const REFRESH_TOKEN = 'refreshToken';
 

@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 5/15/19 9:17 AM
+ * Last modified 5/15/19 9:21 AM
  */
 
 /**
@@ -17,7 +17,7 @@
 namespace App\Components\Passerby\Repositories\Auth;
 
 use App\Components\Passerby\Entities\User;
-use App\Components\Passerby\Repositories\LoginRepositoryInterface;
+use App\Components\Passerby\Repositories\AuthRepositoryInterface;
 use App\Components\Passerby\Repositories\Repository;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -27,7 +27,7 @@ use Webpatser\Uuid\Uuid;
  * Class AuthRepository
  * @package App\Components\Passerby\Repositories\Auth
  */
-class AuthRepository extends Repository implements LoginRepositoryInterface
+class AuthRepository extends Repository implements AuthRepositoryInterface
 {
     private $userCfg;
 

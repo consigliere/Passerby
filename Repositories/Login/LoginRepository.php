@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 4/22/19 2:22 PM
+ * Last modified 5/15/19 7:48 AM
  */
 
 /**
@@ -12,12 +12,10 @@
 namespace App\Components\Passerby\Repositories\Login;
 
 use App\Components\Passerby\Entities\User;
-use App\Components\Passerby\Repositories\{
-    LoginRepositoryInterface, Repository
-};
-use Illuminate\Support\Facades\{
-    Config, DB
-};
+use App\Components\Passerby\Repositories\LoginRepositoryInterface;
+use App\Components\Passerby\Repositories\Repository;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Webpatser\Uuid\Uuid;
 
 /**
@@ -45,12 +43,12 @@ class LoginRepository extends Repository implements LoginRepositoryInterface
      */
     public function create(array $data)
     {
+        // Example
         $user = $this->getModel();
 
         $data['uuid']     = Uuid::generate(5, $data['username'], Uuid::NS_DNS);
         $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
 
-        $user->fill($data);
         $user->save();
 
         return $user;
@@ -64,11 +62,7 @@ class LoginRepository extends Repository implements LoginRepositoryInterface
      */
     public function update(User $user, array $data): User
     {
-        $user->fill($data);
 
-        $user->save();
-
-        return $user;
     }
 
     /**

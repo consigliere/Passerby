@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 5/15/19 9:06 AM
+ * Last modified 5/15/19 9:29 AM
  */
 
 /**
@@ -17,7 +17,7 @@
 namespace App\Components\Passerby\Services;
 
 use App\Components\Passerby\Exceptions\InvalidCredentialsException;
-use App\Components\Passerby\Repositories\LoginRepositoryInterface;
+use App\Components\Passerby\Repositories\AuthRepositoryInterface;
 use App\Components\Passerby\Services\Auth\Service\Proxy;
 use App\Components\Passerby\Services\Auth\Shared\AuthCallable;
 use Illuminate\Foundation\Application;
@@ -51,19 +51,19 @@ class AuthService extends Service
      */
     private $request;
     /**
-     * @var LoginRepositoryInterface
+     * @var AuthRepositoryInterface
      */
-    private $loginRepository;
+    private $authRepository;
 
     /**
      * AuthService constructor.
      *
-     * @param \Illuminate\Foundation\Application                             $app
-     * @param \App\Components\Passerby\Repositories\LoginRepositoryInterface $loginRepository
+     * @param \Illuminate\Foundation\Application                            $app
+     * @param \App\Components\Passerby\Repositories\AuthRepositoryInterface $AuthRepository
      */
-    public function __construct(Application $app, LoginRepositoryInterface $loginRepository)
+    public function __construct(Application $app, AuthRepositoryInterface $AuthRepository)
     {
-        $this->loginRepository = $loginRepository;
+        $this->authRepository = $AuthRepository;
 
         $this->auth    = $app->make('auth');
         $this->cookie  = $app->make('cookie');
@@ -79,7 +79,7 @@ class AuthService extends Service
      */
     public function attemptLogin($username, $password): array
     {
-        $user = $this->loginRepository->getUserByUsernameOrEmail($username)->first();
+        $user = $this->authRepository->getUserByUsernameOrEmail($username)->first();
 
         if ($user !== null) {
             $proxy = $this->proxy(new Proxy, 'password', ['username' => $username, 'password' => $password]);
@@ -125,7 +125,7 @@ class AuthService extends Service
     {
         $accessToken  = $this->auth->user()->token();
         $usertoken    = $accessToken;
-        $refreshToken = $this->loginRepository->logout($accessToken->id);
+        $refreshToken = $this->authRepository->logout($accessToken->id);
 
         $accessToken->revoke();
 

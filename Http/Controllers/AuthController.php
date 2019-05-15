@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 5/15/19 8:03 AM
+ * Last modified 5/15/19 8:45 AM
  */
 
 /**
@@ -17,7 +17,7 @@
 namespace App\Components\Passerby\Http\Controllers;
 
 use App\Components\Passerby\Requests\AuthLoginRequest;
-use App\Components\Passerby\Services\LoginService;
+use App\Components\Passerby\Services\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 
@@ -28,18 +28,18 @@ use Illuminate\Support\Facades\Response;
 class AuthController extends Controller
 {
     /**
-     * @var \App\Components\Passerby\Services\LoginService
+     * @var \App\Components\Passerby\Services\AuthService
      */
-    private $loginService;
+    private $authService;
 
     /**
      * LoginController constructor.
      *
-     * @param \App\Components\Passerby\Services\LoginService $loginService
+     * @param \App\Components\Passerby\Services\AuthService $AuthService
      */
-    public function __construct(LoginService $loginService)
+    public function __construct(AuthService $AuthService)
     {
-        $this->loginService = $loginService;
+        $this->authService = $AuthService;
     }
 
     /**
@@ -53,7 +53,7 @@ class AuthController extends Controller
         $password = $request->input('password');
 
         try {
-            $data = $this->loginService->attemptLogin($username, $password);
+            $data = $this->authService->attemptLogin($username, $password);
         } catch (\Exception $error) {
             $this->fireLog('error', $error->getMessage(), ['error' => $error]);
 
@@ -76,7 +76,7 @@ class AuthController extends Controller
                 ? ['refresh_token' => $request->refreshToken]
                 : [];
 
-            $data = $this->loginService->attemptRefresh($refresh);
+            $data = $this->authService->attemptRefresh($refresh);
         } catch (\Exception $error) {
             $this->fireLog('error', $error->getMessage(), ['error' => $error]);
 
@@ -93,7 +93,7 @@ class AuthController extends Controller
     public function logout(Request $request): \Illuminate\Http\JsonResponse
     {
         try {
-            $this->loginService->logout();
+            $this->authService->logout();
         } catch (\Exception $error) {
             $this->fireLog('error', $error->getMessage(), ['error' => $error]);
 

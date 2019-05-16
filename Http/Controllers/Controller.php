@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 5/15/19 7:48 AM
+ * Last modified 5/16/19 8:13 AM
  */
 
 /**
@@ -31,7 +31,6 @@ abstract class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests, Signal, ErrorLog;
 
-
     /**
      * @param       $data
      * @param int   $statusCode
@@ -56,10 +55,23 @@ abstract class Controller extends BaseController
      */
     protected function getOption($request, array $param = []): array
     {
+        $active  = $param['active'] ?? '';
+        $message = $param['message'] ?? '';
+
         $option = [
-            'api' => [
+            'api'     => [
                 'hasLink' => true,
                 'hasMeta' => true,
+            ],
+            'log'     => [
+                'active'  => $active,
+                'message' => $message,
+            ],
+            'refresh' => [
+                'cookie' => [
+                    'httpOnly' => Config::get('password.refreshToken.cookie.httpOnly'),
+                    'expire'   => Config::get('password.refreshToken.cookie.expire'),
+                ],
             ],
         ];
 
@@ -74,28 +86,30 @@ abstract class Controller extends BaseController
      */
     protected function getParam($request, array $param = []): array
     {
-        $type   = $param['type'] ?? '';
-        $author = $param['author'] ?? '';
-        $email  = $param['email'] ?? '';
+        $type      = $param['type'] ?? '';
+        $grantType = $param['grantType'] ?? '';
+        $author    = $param['author'] ?? '';
+        $email     = $param['email'] ?? '';
 
         $param = [
-            'app'  => [
+            'app'       => [
                 'name' => Config::get('app.name'),
             ],
-            'api'  => [
+            'api'       => [
                 'meta' => [
                     'author' => $author,
                     'email'  => $email,
                 ],
             ],
-            'type' => $type,
-            'auth' => [
-                'user' => $request->user()->toArray(),
+            'type'      => $type,
+            'auth'      => [
+                'user' => $request->user() ? $request->user()->toArray() : '',
             ],
-            'link' => [
+            'link'      => [
                 'fullUrl' => $request->fullUrl(),
                 'url'     => $request->url(),
             ],
+            'grantType' => $grantType,
         ];
 
         return Arr::dot($param);

@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 3/21/19 5:36 AM
+ * Last modified 5/16/19 8:19 AM
  */
 
 /**
@@ -32,29 +32,29 @@ class LoginMessageEventSubscriber
         $events->listen('login.logout', 'App\Components\Passerby\Listeners\LoginMessageEventSubscriber@onLogoutMessage', 10);
     }
 
-
     /**
-     * @param array $user ['username'], $user['userid']
+     * @param array $data
      */
-    public function onLoginMessage(array $user): void
+    public function onLoginMessage(array $data = []): void
     {
-        $this->fireLog('info', Config::get('password.log.info.login.message') . ' @UserID: ' . $user['userid']);
+        $this->fireLog('info', Config::get('password.log.info.login.message') . ' @' .
+            $data['user']->username . '#' . $data['user']->uuid);
     }
 
     /**
-     *
+     * @param array $data
      */
-    public function onRefreshMessage(): void
+    public function onRefreshMessage(array $data = []): void
     {
         $this->fireLog('info', Config::get('password.log.info.refresh.message'));
     }
 
-
     /**
-     * @param array $user ['userid'], $user['usertokenid']
+     * @param array $data
      */
-    public function onLogoutMessage(array $user): void
+    public function onLogoutMessage(array $data = []): void
     {
-        $this->fireLog('info', Config::get('password.log.info.logout.message') . ' @UserID: ' . $user['userid']);
+        $this->fireLog('info', Config::get('password.log.info.logout.message') . ' @' .
+            $data['username'] . '#' . $data['useruuid'] . ' @tokenID#' . $data['usertokenid']);
     }
 }

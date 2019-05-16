@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 5/15/19 9:06 AM
+ * Last modified 5/16/19 8:11 AM
  */
 
 /**
@@ -23,15 +23,16 @@ namespace App\Components\Passerby\Services\Auth\Shared;
 trait AuthCallable
 {
     /**
-     * @param       $proxy
-     * @param       $grantType
-     * @param array $data
-     * @param array $param
+     * @param callable $proxy
+     * @param          $grantType
+     * @param array    $data
+     * @param array    $option
+     * @param array    $param
      *
      * @return array
      */
-    public function proxy(Callable $proxy, $grantType, array $data = [], array $param = []): array
+    public function proxy(Callable $proxy, $grantType, array $data = [], array $option = [], array $param = []): array
     {
-        return $proxy($grantType, $data, $param);
+        return $proxy($grantType, $data, $option, $param);
     }
 }

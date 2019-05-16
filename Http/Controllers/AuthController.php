@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 5/15/19 8:45 AM
+ * Last modified 5/16/19 8:12 AM
  */
 
 /**
@@ -49,11 +49,14 @@ class AuthController extends Controller
      */
     public function login(AuthLoginRequest $request): \Illuminate\Http\JsonResponse
     {
-        $username = $request->input('username');
-        $password = $request->input('password');
+        $data   = [
+            'form' => $request->all(),
+        ];
+        $option = $this->getOption($request);
+        $param  = $this->getParam($request);
 
         try {
-            $data = $this->authService->attemptLogin($username, $password);
+            $data = $this->authService->attemptLogin($data, $option, $param);
         } catch (\Exception $error) {
             $this->fireLog('error', $error->getMessage(), ['error' => $error]);
 
@@ -71,12 +74,14 @@ class AuthController extends Controller
      */
     public function refresh(Request $request): \Illuminate\Http\JsonResponse
     {
-        try {
-            $refresh = $request->has('refreshToken')
-                ? ['refresh_token' => $request->refreshToken]
-                : [];
+        $data   = [
+            'refresh_token' => $request->has('refreshToken') ? $request->refreshToken : [],
+        ];
+        $option = $this->getOption($request);
+        $param  = $this->getParam($request);
 
-            $data = $this->authService->attemptRefresh($refresh);
+        try {
+            $data = $this->authService->attemptRefresh($data, $option, $param);
         } catch (\Exception $error) {
             $this->fireLog('error', $error->getMessage(), ['error' => $error]);
 
@@ -88,12 +93,18 @@ class AuthController extends Controller
     }
 
     /**
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function logout(Request $request): \Illuminate\Http\JsonResponse
     {
+        $data   = [];
+        $option = $this->getOption($request);
+        $param  = $this->getParam($request);
+
         try {
-            $this->authService->logout();
+            $this->authService->logout($data, $option, $param);
         } catch (\Exception $error) {
             $this->fireLog('error', $error->getMessage(), ['error' => $error]);
 

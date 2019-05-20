@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 5/16/19 8:13 AM
+ * Last modified 5/20/19 5:17 PM
  */
 
 /**
@@ -20,8 +20,10 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use JsonSerializable;
+use Webpatser\Uuid\Uuid;
 
 /**
  * Class Controller
@@ -30,6 +32,11 @@ use JsonSerializable;
 abstract class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests, Signal, ErrorLog;
+
+    /**
+     * @var string
+     */
+    protected $euuid;
 
     /**
      * @param       $data
@@ -48,70 +55,92 @@ abstract class Controller extends BaseController
     }
 
     /**
-     * @param       $request
      * @param array $param
      *
      * @return array
+     * @internal param $request
      */
-    protected function getOption($request, array $param = []): array
+    protected function getOption(array $param = []): array
     {
+        $request = App::get('request');
         $active  = $param['active'] ?? '';
         $message = $param['message'] ?? '';
+        $opt     = [];
 
-        $option = [
-            'api'     => [
-                'hasLink' => true,
-                'hasMeta' => true,
-            ],
-            'log'     => [
-                'active'  => $active,
-                'message' => $message,
-            ],
-            'refresh' => [
-                'cookie' => [
-                    'httpOnly' => Config::get('password.refreshToken.cookie.httpOnly'),
-                    'expire'   => Config::get('password.refreshToken.cookie.expire'),
-                ],
-            ],
-        ];
+        data_set($opt, 'api.hasLink', true);
+        data_set($opt, 'api.hasMeta', true);
+        data_set($opt, 'log.active', $active);
+        data_set($opt, 'log.message', $message);
+        data_set($opt, 'refresh.cookie.httpOnly', Config::get('password.refreshToken.cookie.httpOnly'));
+        data_set($opt, 'refresh.cookie.expire', Config::get('password.refreshToken.cookie.expire'));
 
-        return Arr::dot($option);
+        return Arr::dot($opt);
     }
 
     /**
-     * @param       $request
+     * @param string $type
+     * @param array  $param
+     *
+     * @return array
+     * @internal param $request
+     */
+    protected function getParam(string $type = '', array $param = []): array
+    {
+        $request   = App::get('request');
+        $grantType = $param['grantType'] ?? '';
+        $author    = $param['author'] ?? '';
+        $email     = $param['email'] ?? '';
+        $arg       = [];
+
+        data_set($arg, 'app.name', Config::get('app.name'));
+        data_set($arg, 'api.meta.author', $author);
+        data_set($arg, 'api.meta.email', $email);
+        data_set($arg, 'type', $type);
+        data_set($arg, 'auth.user', $request->user() ? $request->user()->toArray() : '');
+        data_set($arg, 'link.fullUrl', $request->fullUrl());
+        data_set($arg, 'link.url', $request->url());
+        data_set($arg, 'grantType', $grantType);
+
+        return Arr::dot($arg);
+    }
+
+    /**
+     * @return string
+     */
+    protected function getUuid(): string
+    {
+        return (string)Uuid::generate(4);
+    }
+
+    /**
+     * @param       $id
+     * @param       $errorObj
      * @param array $param
      *
      * @return array
      */
-    protected function getParam($request, array $param = []): array
+    protected function getErrorResponse($id, $errorObj, array $param = []): array
     {
-        $type      = $param['type'] ?? '';
-        $grantType = $param['grantType'] ?? '';
-        $author    = $param['author'] ?? '';
-        $email     = $param['email'] ?? '';
+        $request       = App::get('request');
+        $errorResponse = [];
 
-        $param = [
-            'app'       => [
-                'name' => Config::get('app.name'),
-            ],
-            'api'       => [
-                'meta' => [
-                    'author' => $author,
-                    'email'  => $email,
-                ],
-            ],
-            'type'      => $type,
-            'auth'      => [
-                'user' => $request->user() ? $request->user()->toArray() : '',
-            ],
-            'link'      => [
-                'fullUrl' => $request->fullUrl(),
-                'url'     => $request->url(),
-            ],
-            'grantType' => $grantType,
-        ];
+        data_set($errorResponse, 'error.id', $id);
 
-        return Arr::dot($param);
+        if ($errorObj instanceof \Exception) {
+            data_set($errorResponse, 'error.code', $errorObj->getCode());
+            data_set($errorResponse, 'error.title', $errorObj->getMessage());
+
+            if (Config::get('app.env') !== 'production') {
+                data_set($errorResponse, 'error.source.file', $errorObj->getFile());
+                data_set($errorResponse, 'error.source.line', $errorObj->getLine());
+                data_set($errorResponse, 'error.detail', $errorObj->getTraceAsString());
+            }
+        }
+
+        data_set($errorResponse, 'link.self', $request->fullUrl());
+        data_set($errorResponse, 'meta.copyright', 'copyrightⒸ ' . date('Y') . ' ' . Config::get('app.name'));
+        data_set($errorResponse, 'meta.authors', Config::get('scaffold.api.authors'));
+
+        return $errorResponse;
     }
 }

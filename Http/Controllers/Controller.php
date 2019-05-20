@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 5/20/19 5:17 PM
+ * Last modified 5/20/19 5:28 PM
  */
 
 /**
@@ -90,18 +90,18 @@ abstract class Controller extends BaseController
         $grantType = $param['grantType'] ?? '';
         $author    = $param['author'] ?? '';
         $email     = $param['email'] ?? '';
-        $arg       = [];
+        $par       = [];
 
-        data_set($arg, 'app.name', Config::get('app.name'));
-        data_set($arg, 'api.meta.author', $author);
-        data_set($arg, 'api.meta.email', $email);
-        data_set($arg, 'type', $type);
-        data_set($arg, 'auth.user', $request->user() ? $request->user()->toArray() : '');
-        data_set($arg, 'link.fullUrl', $request->fullUrl());
-        data_set($arg, 'link.url', $request->url());
-        data_set($arg, 'grantType', $grantType);
+        data_set($par, 'app.name', Config::get('app.name'));
+        data_set($par, 'api.meta.author', $author);
+        data_set($par, 'api.meta.email', $email);
+        data_set($par, 'type', $type);
+        data_set($par, 'auth.user', $request->user() ? $request->user()->toArray() : '');
+        data_set($par, 'link.fullUrl', $request->fullUrl());
+        data_set($par, 'link.url', $request->url());
+        data_set($par, 'grantType', $grantType);
 
-        return Arr::dot($arg);
+        return Arr::dot($par);
     }
 
     /**

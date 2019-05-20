@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 5/16/19 8:12 AM
+ * Last modified 5/20/19 2:17 PM
  */
 
 /**
@@ -19,7 +19,6 @@ namespace App\Components\Passerby\Http\Controllers;
 use App\Components\Passerby\Requests\AuthLoginRequest;
 use App\Components\Passerby\Services\AuthService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
 
 /**
  * Class AuthController
@@ -40,6 +39,7 @@ class AuthController extends Controller
     public function __construct(AuthService $AuthService)
     {
         $this->authService = $AuthService;
+        $this->euuid       = $this->getUuid();
     }
 
     /**
@@ -52,16 +52,15 @@ class AuthController extends Controller
         $data   = [
             'form' => $request->all(),
         ];
-        $option = $this->getOption($request);
-        $param  = $this->getParam($request);
+        $option = $this->getOption();
+        $param  = $this->getParam();
 
         try {
             $data = $this->authService->attemptLogin($data, $option, $param);
         } catch (\Exception $error) {
-            $this->fireLog('error', $error->getMessage(), ['error' => $error]);
+            $this->fireLog('error', $error->getMessage(), ['error' => $error, 'uuid' => $this->euuid]);
 
-            return Response::error($error->getMessage(), $error->getCode())
-                ->setStatusCode(500);
+            return $this->response($this->getErrorResponse($this->euuid, $error), 500);
         }
 
         return $this->response($data);
@@ -77,16 +76,15 @@ class AuthController extends Controller
         $data   = [
             'refresh_token' => $request->has('refreshToken') ? $request->refreshToken : [],
         ];
-        $option = $this->getOption($request);
-        $param  = $this->getParam($request);
+        $option = $this->getOption();
+        $param  = $this->getParam();
 
         try {
             $data = $this->authService->attemptRefresh($data, $option, $param);
         } catch (\Exception $error) {
-            $this->fireLog('error', $error->getMessage(), ['error' => $error]);
+            $this->fireLog('error', $error->getMessage(), ['error' => $error, 'uuid' => $this->euuid]);
 
-            return Response::error($error->getMessage(), $error->getCode())
-                ->setStatusCode(500);
+            return $this->response($this->getErrorResponse($this->euuid, $error), 500);
         }
 
         return $this->response($data);
@@ -100,16 +98,15 @@ class AuthController extends Controller
     public function logout(Request $request): \Illuminate\Http\JsonResponse
     {
         $data   = [];
-        $option = $this->getOption($request);
-        $param  = $this->getParam($request);
+        $option = $this->getOption();
+        $param  = $this->getParam();
 
         try {
             $this->authService->logout($data, $option, $param);
         } catch (\Exception $error) {
-            $this->fireLog('error', $error->getMessage(), ['error' => $error]);
+            $this->fireLog('error', $error->getMessage(), ['error' => $error, 'uuid' => $this->euuid]);
 
-            return Response::error($error->getMessage(), $error->getCode())
-                ->setStatusCode(500);
+            return $this->response($this->getErrorResponse($this->euuid, $error), 500);
         }
 
         return $this->response(null, 204);

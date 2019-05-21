@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 5/21/19 1:28 PM
+ * Last modified 5/21/19 3:06 PM
  */
 
 /**
@@ -30,6 +30,9 @@ class AuthService extends Service
 {
     use AuthCallable;
 
+    /**
+     *
+     */
     const REFRESH_TOKEN = 'refreshToken';
 
     /**
@@ -69,6 +72,13 @@ class AuthService extends Service
         $this->request = $app->make('request');
     }
 
+    /**
+     * @param array $data
+     * @param array $option
+     * @param array $arg
+     *
+     * @return array
+     */
     public function attemptLogin(array $data = [], array $option = [], array $arg = []): array
     {
         $user = $this->authRepository->getUserByUsernameOrEmail(data_get($data, 'form.username'))->first();
@@ -86,6 +96,13 @@ class AuthService extends Service
         throw new InvalidCredentialsException();
     }
 
+    /**
+     * @param array $data
+     * @param array $option
+     * @param array $arg
+     *
+     * @return array
+     */
     public function attemptRefresh(array $data = [], array $option = [], array $arg = []): array
     {
         if (isset($data['refresh_token']) && !empty($data['refresh_token']) && ($data['refresh_token'] !== null) && (!$option['refresh.cookie.httpOnly'])) {
@@ -103,6 +120,11 @@ class AuthService extends Service
         return $proxy;
     }
 
+    /**
+     * @param array $data
+     * @param array $option
+     * @param array $arg
+     */
     public function logout(array $data = [], array $option = [], array $arg = []): void
     {
         $accessToken  = $this->auth->user()->token();

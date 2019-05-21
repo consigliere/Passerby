@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 5/16/19 8:11 AM
+ * Last modified 5/21/19 1:28 PM
  */
 
 /**
@@ -23,6 +23,8 @@ namespace App\Components\Passerby\Services\Auth\Shared;
 trait AuthCallable
 {
     /**
+     * @deprecated
+     *
      * @param callable $proxy
      * @param          $grantType
      * @param array    $data

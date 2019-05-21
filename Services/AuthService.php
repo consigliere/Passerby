@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 5/16/19 8:19 AM
+ * Last modified 5/21/19 1:28 PM
  */
 
 /**
@@ -21,8 +21,6 @@ use App\Components\Passerby\Repositories\AuthRepositoryInterface;
 use App\Components\Passerby\Services\Auth\Service\Proxy;
 use App\Components\Passerby\Services\Auth\Shared\AuthCallable;
 use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Event;
 
 /**
  * Class AuthService
@@ -71,22 +69,15 @@ class AuthService extends Service
         $this->request = $app->make('request');
     }
 
-    /**
-     * @param array $data
-     * @param array $option
-     * @param array $param
-     *
-     * @return array
-     */
-    public function attemptLogin(array $data = [], array $option = [], array $param = []): array
+    public function attemptLogin(array $data = [], array $option = [], array $arg = []): array
     {
         $user = $this->authRepository->getUserByUsernameOrEmail(data_get($data, 'form.username'))->first();
 
         if ($user !== null) {
-            $proxy = $this->proxy(new Proxy, 'password', $data['form']);
+            $proxy = (new Proxy)('password', $data['form']);
 
-            if (Config::get('password.log.info.login.active')) {
-                Event::dispatch('login.message', [['user' => $user,]]);
+            if (config('password.log.info.login.active')) {
+                event('login.message', [['user' => $user,]]);
             }
 
             return $proxy;
@@ -95,14 +86,7 @@ class AuthService extends Service
         throw new InvalidCredentialsException();
     }
 
-    /**
-     * @param array $data
-     * @param array $option
-     * @param array $param
-     *
-     * @return array
-     */
-    public function attemptRefresh(array $data = [], array $option = [], array $param = []): array
+    public function attemptRefresh(array $data = [], array $option = [], array $arg = []): array
     {
         if (isset($data['refresh_token']) && !empty($data['refresh_token']) && ($data['refresh_token'] !== null) && (!$option['refresh.cookie.httpOnly'])) {
             $token = $data['refresh_token'];
@@ -110,21 +94,16 @@ class AuthService extends Service
             $token = $this->request->cookie(self::REFRESH_TOKEN);
         }
 
-        $proxy = $this->proxy(new Proxy, 'refresh_token', ['refresh_token' => $token]);
+        $proxy = (new Proxy)('refresh_token', ['refresh_token' => $token]);
 
-        if (Config::get('password.log.info.refresh.active')) {
-            Event::dispatch('login.refresh');
+        if (config('password.log.info.refresh.active')) {
+            event('login.refresh');
         }
 
         return $proxy;
     }
 
-    /**
-     * @param array $data
-     * @param array $option
-     * @param array $param
-     */
-    public function logout(array $data = [], array $option = [], array $param = []): void
+    public function logout(array $data = [], array $option = [], array $arg = []): void
     {
         $accessToken  = $this->auth->user()->token();
         $usertoken    = $accessToken;
@@ -134,8 +113,8 @@ class AuthService extends Service
 
         $this->cookie->queue($this->cookie->forget(self::REFRESH_TOKEN));
 
-        if (Config::get('password.log.info.logout.active')) {
-            Event::dispatch('login.logout', [['useruuid' => $param['auth.user.uuid'], 'username' => $param['auth.user.username'], 'usertokenid' => $usertoken->id]]);
+        if (config('password.log.info.logout.active')) {
+            event('login.logout', [['useruuid' => $arg['auth.user.uuid'], 'username' => $arg['auth.user.username'], 'usertokenid' => $usertoken->id]]);
         }
     }
 }

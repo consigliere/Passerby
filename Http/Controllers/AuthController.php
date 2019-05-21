@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 5/20/19 2:17 PM
+ * Last modified 5/21/19 1:10 PM
  */
 
 /**
@@ -39,7 +39,7 @@ class AuthController extends Controller
     public function __construct(AuthService $AuthService)
     {
         $this->authService = $AuthService;
-        $this->euuid       = $this->getUuid();
+        $this->euuid       = randomUuid();
     }
 
     /**

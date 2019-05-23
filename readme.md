@@ -148,42 +148,6 @@ Example Response
 Note :
 - Enable when `refreshToken.cookie.httpOnly` value in `config/password` set to _false_
 
-### Get User
-
-Example request
-
-```http
-GET /api/user HTTP/1.1
-Host: localhost:8000
-Accept: application/vnd.api+json
-Content-Type: application/vnd.api+json
-
-```
-
-Example Response
-
-```json
-{
-    "data": {
-        "type": "users",
-        "id": "9e556479-7003-5916-9cd6-33f4227cec9b",
-        "attributes": {
-            "username": "user",
-            "name": "user",
-            "email": "user@api.com"
-        }
-    },
-    "link": "http://localhost:8000/api/user",
-    "meta": {
-        "copyright": "copyrightⒸ 2019 Onsigbaar",
-        "author": [
-            "person1",
-            "person2"
-        ]
-    }
-}
-```
-
 ### Logout User
 
 Example request

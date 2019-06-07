@@ -1,12 +1,12 @@
 <?php
 /**
- * Copyright(c) 2019. All rights reserved.
- * Last modified 5/15/19 8:59 AM
+ * Proxy.php
+ * Created by @anonymoussc on 01/01/2019 6:20 AM.
  */
 
 /**
- * Proxy.php
- * Created by @anonymoussc on 01/01/2019 6:20 AM.
+ * Copyright(c) 2019. All rights reserved.
+ * Last modified 6/7/19 7:23 AM
  */
 
 namespace App\Components\Passerby\Services\Auth\Service;
@@ -34,10 +34,23 @@ class Proxy
      * @var
      */
     private $apiConsumer;
+
     /**
      * @var bool
      */
-    private $httpOnly;
+    private $cookieHttpOnly;
+    /**
+     * @var int
+     */
+    private $cookieExpire;
+    /**
+     * @var mixed
+     */
+    private $passwordClientId;
+    /**
+     * @var mixed
+     */
+    private $passwordClientSecret;
 
     /**
      * Proxy constructor.
@@ -47,7 +60,10 @@ class Proxy
         $this->apiConsumer = App::make('apiconsumer');
         $this->appCookie   = App::make('cookie');
 
-        $this->httpOnly = (boolean)Config::get('password.refreshToken.cookie.httpOnly');
+        $this->cookieHttpOnly       = (boolean)Config::get('password.refreshToken.cookie.httpOnly');
+        $this->cookieExpire         = (int)Config::get('password.refreshToken.cookie.expire');
+        $this->passwordClientId     = Config::get('password.client.id');
+        $this->passwordClientSecret = Config::get('password.client.secret');
     }
 
     /**
@@ -64,7 +80,7 @@ class Proxy
 
         $token['access_token'] = $proxy->access_token;
 
-        $this->httpOnly
+        $this->cookieHttpOnly
             ? $this->setCookieWith($proxy->refresh_token)
             : $token['refresh_token'] = $proxy->refresh_token;
 
@@ -81,8 +97,8 @@ class Proxy
     private function clientCredential($type): array
     {
         return [
-            'client_id'     => Config::get('password.client.id'),
-            'client_secret' => Config::get('password.client.secret'),
+            'client_id'     => $this->passwordClientId,
+            'client_secret' => $this->passwordClientSecret,
             'grant_type'    => $type,
         ];
     }
@@ -108,17 +124,15 @@ class Proxy
      */
     private function setCookieWith($refreshToken): void
     {
-        $expire = (int)Config::get('password.refreshToken.cookie.expire');
-
         // Create a refresh token cookie
         $this->appCookie->queue(
             self::REFRESH_TOKEN,
             $refreshToken,
-            $expire,
+            $this->cookieExpire,
             null,
             null,
             false,
-            $this->httpOnly
+            $this->cookieHttpOnly
         );
     }
 }

@@ -1,10 +1,5 @@
 <?php
 /**
- * Copyright(c) 2019. All rights reserved.
- * Last modified 5/21/19 3:06 PM
- */
-
-/**
  * LoginService.php
  * Created by @anonymoussc on 10/25/2017 4:18 AM.
  */
@@ -12,6 +7,11 @@
 /**
  * AuthService.php
  * @renamed by @anonymoussc on 05/15/2019 8:46 AM.
+ */
+
+/**
+ * Copyright(c) 2019. All rights reserved.
+ * Last modified 6/7/19 7:23 AM
  */
 
 namespace App\Components\Passerby\Services;
@@ -30,9 +30,6 @@ class AuthService extends Service
 {
     use AuthCallable;
 
-    /**
-     *
-     */
     const REFRESH_TOKEN = 'refreshToken';
 
     /**

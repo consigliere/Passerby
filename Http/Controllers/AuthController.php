@@ -1,10 +1,5 @@
 <?php
 /**
- * Copyright(c) 2019. All rights reserved.
- * Last modified 5/21/19 1:10 PM
- */
-
-/**
  * LoginController.php
  * Created by @anonymoussc on 10/31/2018 12:28 PM.
  */
@@ -12,6 +7,11 @@
 /**
  * AuthController.php
  * @renamed by @anonymoussc on 05/15/2019 7:55 AM.
+ */
+
+/**
+ * Copyright(c) 2019. All rights reserved.
+ * Last modified 7/5/19 10:04 PM
  */
 
 namespace App\Components\Passerby\Http\Controllers;
@@ -60,7 +60,7 @@ class AuthController extends Controller
         } catch (\Exception $error) {
             $this->fireLog('error', $error->getMessage(), ['error' => $error, 'uuid' => $this->euuid]);
 
-            return $this->response($this->getErrorResponse($this->euuid, $error), 500);
+            return $this->response($this->getErrorResponse($this->euuid, $error), httpStatusCode($error));
         }
 
         return $this->response($data);
@@ -84,7 +84,7 @@ class AuthController extends Controller
         } catch (\Exception $error) {
             $this->fireLog('error', $error->getMessage(), ['error' => $error, 'uuid' => $this->euuid]);
 
-            return $this->response($this->getErrorResponse($this->euuid, $error), 500);
+            return $this->response($this->getErrorResponse($this->euuid, $error), httpStatusCode($error));
         }
 
         return $this->response($data);
@@ -106,7 +106,7 @@ class AuthController extends Controller
         } catch (\Exception $error) {
             $this->fireLog('error', $error->getMessage(), ['error' => $error, 'uuid' => $this->euuid]);
 
-            return $this->response($this->getErrorResponse($this->euuid, $error), 500);
+            return $this->response($this->getErrorResponse($this->euuid, $error), httpStatusCode($error));
         }
 
         return $this->response(null, 204);

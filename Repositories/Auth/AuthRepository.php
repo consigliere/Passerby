@@ -1,10 +1,5 @@
 <?php
 /**
- * Copyright(c) 2019. All rights reserved.
- * Last modified 5/15/19 9:21 AM
- */
-
-/**
  * LoginRepository.php
  * Created by @anonymoussc on 11/10/2017 10:35 AM.
  */
@@ -14,6 +9,11 @@
  * @renamed by @anonymoussc on 05/15/2019 9:12 AM.
  */
 
+/**
+ * Copyright(c) 2019. All rights reserved.
+ * Last modified 7/6/19 5:48 AM
+ */
+
 namespace App\Components\Passerby\Repositories\Auth;
 
 use App\Components\Passerby\Entities\User;
@@ -21,7 +21,6 @@ use App\Components\Passerby\Repositories\AuthRepositoryInterface;
 use App\Components\Passerby\Repositories\Repository;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
-use Webpatser\Uuid\Uuid;
 
 /**
  * Class AuthRepository
@@ -48,15 +47,7 @@ class AuthRepository extends Repository implements AuthRepositoryInterface
      */
     public function create(array $data)
     {
-        // Example
-        $user = $this->getModel();
-
-        $data['uuid']     = Uuid::generate(5, $data['username'], Uuid::NS_DNS);
-        $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
-
-        $user->save();
-
-        return $user;
+        //
     }
 
     /**
@@ -67,7 +58,7 @@ class AuthRepository extends Repository implements AuthRepositoryInterface
      */
     public function update(User $user, array $data): User
     {
-
+        //
     }
 
     /**

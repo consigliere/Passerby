@@ -11,7 +11,7 @@
 
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 7/5/19 10:04 PM
+ * Last modified 7/6/19 11:04 PM
  */
 
 namespace App\Components\Passerby\Http\Controllers;
@@ -52,8 +52,8 @@ class AuthController extends Controller
         $data   = [
             'form' => $request->all(),
         ];
-        $option = $this->getOption();
-        $param  = $this->getParam();
+        $option = [];
+        $param  = [];
 
         try {
             $data = $this->authService->attemptLogin($data, $option, $param);
@@ -76,8 +76,8 @@ class AuthController extends Controller
         $data   = [
             'refresh_token' => $request->has('refreshToken') ? $request->refreshToken : [],
         ];
-        $option = $this->getOption();
-        $param  = $this->getParam();
+        $option = [];
+        $param  = [];
 
         try {
             $data = $this->authService->attemptRefresh($data, $option, $param);

@@ -6,11 +6,12 @@
 
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 6/7/19 7:23 AM
+ * Last modified 7/7/19 6:50 AM
  */
 
 namespace App\Components\Passerby\Services\Auth\Service;
 
+use Api\User\Entities\User;
 use App\Components\Passerby\Exceptions\InvalidCredentialsException;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
@@ -19,7 +20,7 @@ use Illuminate\Support\Facades\Config;
  * Class Proxy
  * @package App\Components\Passerby\Services\Auth\Service
  */
-class Proxy
+final class Proxy
 {
     /**
      * @const
@@ -57,9 +58,8 @@ class Proxy
      */
     public function __construct()
     {
-        $this->apiConsumer = App::make('apiconsumer');
-        $this->appCookie   = App::make('cookie');
-
+        $this->apiConsumer          = App::make('apiconsumer');
+        $this->appCookie            = App::make('cookie');
         $this->cookieHttpOnly       = (boolean)Config::get('password.refreshToken.cookie.httpOnly');
         $this->cookieExpire         = (int)Config::get('password.refreshToken.cookie.expire');
         $this->passwordClientId     = Config::get('password.client.id');
@@ -69,38 +69,47 @@ class Proxy
     /**
      * @param       $grantType
      * @param array $data
+     * @param null  $userId
      * @param array $param
      *
      * @return array
      */
-    public function __invoke($grantType, array $data = [], array $param = []): array
+    public function __invoke($grantType, array $data = [], $userId = null, array $param = []): array
     {
-        $data  = array_merge($data, $this->clientCredential($grantType));
+        $data  = array_merge($data, $this->clientCredential($grantType, $userId));
         $proxy = json_decode($this->proxyResponse($data));
 
         $token['access_token'] = $proxy->access_token;
-
         $this->cookieHttpOnly
             ? $this->setCookieWith($proxy->refresh_token)
             : $token['refresh_token'] = $proxy->refresh_token;
-
         $token['expires_in'] = $proxy->expires_in;
 
         return $token;
     }
 
     /**
-     * @param $type
+     * @param      $type
+     *
+     * @param null $userId
      *
      * @return array
      */
-    private function clientCredential($type): array
+    private function clientCredential($type, $userId = null): array
     {
-        return [
+        $credential = [
             'client_id'     => $this->passwordClientId,
             'client_secret' => $this->passwordClientSecret,
             'grant_type'    => $type,
         ];
+
+        if (class_exists(\App\Components\Scaffold\Providers\ScaffoldServiceProvider::class)) {
+            if ($type === 'password' && null !== $userId) {
+                $credential['scope'] = $this->loadScope($userId);
+            }
+        }
+
+        return $credential;
     }
 
     /**
@@ -124,15 +133,41 @@ class Proxy
      */
     private function setCookieWith($refreshToken): void
     {
-        // Create a refresh token cookie
         $this->appCookie->queue(
-            self::REFRESH_TOKEN,
-            $refreshToken,
-            $this->cookieExpire,
-            null,
-            null,
-            false,
-            $this->cookieHttpOnly
+            self::REFRESH_TOKEN, $refreshToken, $this->cookieExpire, null, null, false, $this->cookieHttpOnly
         );
+    }
+
+    /**
+     * @param $userId
+     *
+     * @return string
+     */
+    private function loadScope($userId): string
+    {
+        $permissions = new \Illuminate\Database\Eloquent\Collection;
+        $user        = User::where('id', $userId)->with('role', 'role.permissions')->with('roles', 'roles.permissions')->first();
+        $scope       = '';
+
+        if (null !== $user) {
+            $userroles = $user->roles;
+            $userroles->prepend($user->role);
+
+            foreach ($userroles as $role) {
+                $permissions = $permissions->merge($role->permissions);
+            }
+
+            $newPerm = [];
+            $i       = 0;
+            foreach ($permissions as $perm) {
+                $newPerm[$i] = $perm['key'];
+
+                $i++;
+            }
+
+            $scope = implode(' ', $newPerm);
+        }
+
+        return $scope;
     }
 }

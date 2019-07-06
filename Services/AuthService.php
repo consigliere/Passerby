@@ -11,7 +11,7 @@
 
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 6/7/19 7:23 AM
+ * Last modified 7/6/19 11:23 PM
  */
 
 namespace App\Components\Passerby\Services;
@@ -21,6 +21,7 @@ use App\Components\Passerby\Repositories\AuthRepositoryInterface;
 use App\Components\Passerby\Services\Auth\Service\Proxy;
 use App\Components\Passerby\Services\Auth\Shared\AuthCallable;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\App;
 
 /**
  * Class AuthService
@@ -41,10 +42,6 @@ class AuthService extends Service
      */
     private $cookie;
     /**
-     * @var \Illuminate\Database\DatabaseManager|mixed
-     */
-    private $db;
-    /**
      * @var mixed
      */
     private $request;
@@ -52,6 +49,7 @@ class AuthService extends Service
      * @var AuthRepositoryInterface
      */
     private $authRepository;
+    private $refreshToken;
 
     /**
      * AuthService constructor.
@@ -65,27 +63,35 @@ class AuthService extends Service
 
         $this->auth    = $app->make('auth');
         $this->cookie  = $app->make('cookie');
-        $this->db      = $app->make('db');
         $this->request = $app->make('request');
+    }
+
+    /**
+     * @param $name
+     * @param $arguments
+     *
+     * @return mixed
+     */
+    public function __call($name, $arguments)
+    {
+        $prop = lcfirst(substr($name, 3));
+
+        return $this->$prop;
     }
 
     /**
      * @param array $data
      * @param array $option
-     * @param array $arg
+     * @param array $param
      *
      * @return array
      */
-    public function attemptLogin(array $data = [], array $option = [], array $arg = []): array
+    public function attemptLogin(array $data = [], array $option = [], array $param = []): array
     {
         $user = $this->authRepository->getUserByUsernameOrEmail(data_get($data, 'form.username'))->first();
-
-        if ($user !== null) {
-            $proxy = (new Proxy)('password', $data['form']);
-
-            if (config('password.log.info.login.active')) {
-                event('login.message', [['user' => $user,]]);
-            }
+        if (null !== $user) {
+            $proxy = (new Proxy)('password', $data['form'], $user->id);
+            $this->logLogin($user);
 
             return $proxy;
         }
@@ -96,23 +102,16 @@ class AuthService extends Service
     /**
      * @param array $data
      * @param array $option
-     * @param array $arg
+     * @param array $param
      *
      * @return array
      */
-    public function attemptRefresh(array $data = [], array $option = [], array $arg = []): array
+    public function attemptRefresh(array $data = [], array $option = [], array $param = []): array
     {
-        if (isset($data['refresh_token']) && !empty($data['refresh_token']) && ($data['refresh_token'] !== null) && (!$option['refresh.cookie.httpOnly'])) {
-            $token = $data['refresh_token'];
-        } else {
-            $token = $this->request->cookie(self::REFRESH_TOKEN);
-        }
-
+        $token = $this->findInputRefreshToken($data)->verifyInputRefreshToken(null)->getRefreshToken();
         $proxy = (new Proxy)('refresh_token', ['refresh_token' => $token]);
 
-        if (config('password.log.info.refresh.active')) {
-            event('login.refresh');
-        }
+        $this->logRefresh();
 
         return $proxy;
     }
@@ -120,20 +119,82 @@ class AuthService extends Service
     /**
      * @param array $data
      * @param array $option
-     * @param array $arg
+     * @param array $param
      */
-    public function logout(array $data = [], array $option = [], array $arg = []): void
+    public function logout(array $data = [], array $option = [], array $param = []): void
     {
         $accessToken  = $this->auth->user()->token();
         $usertoken    = $accessToken;
         $refreshToken = $this->authRepository->logout($accessToken->id);
-
         $accessToken->revoke();
-
         $this->cookie->queue($this->cookie->forget(self::REFRESH_TOKEN));
 
+        $this->logLogout($usertoken, $param);
+    }
+
+    /**
+     * @param $data
+     *
+     * @return $this
+     */
+    private function findInputRefreshToken($data): self
+    {
+        $this->refreshToken = data_get($data, 'refresh_token');
+
+        return $this;
+    }
+
+    /**
+     * @param null $token
+     *
+     * @return $this
+     */
+    private function verifyInputRefreshToken($token = null): self
+    {
+        $newToken = $token ?? $this->refreshToken;
+
+        if (isset($newToken) && !empty($newToken) && (null !== $newToken) && (!config('password.refreshToken.cookie.httpOnly'))) {
+            $this->refreshToken = $newToken;
+        } else {
+            $this->refreshToken = $this->request->cookie(self::REFRESH_TOKEN);
+        }
+
+        return $this;
+    }
+
+    private function logRefresh(): void
+    {
+        if (config('password.log.info.refresh.active')) {
+            event('login.refresh');
+        }
+    }
+
+    /**
+     * @param $user
+     */
+    private function logLogin($user): void
+    {
+        if (config('password.log.info.login.active')) {
+            event('login.message', [['user' => $user,]]);
+        }
+    }
+
+    /**
+     * @param $usertoken
+     * @param $param
+     */
+    private function logLogout($usertoken, $param): void
+    {
+        $request  = App::get('request');
+        $authUser = $request->user() ? $request->user()->toArray() : '';
+
         if (config('password.log.info.logout.active')) {
-            event('login.logout', [['useruuid' => $arg['auth.user.uuid'], 'username' => $arg['auth.user.username'], 'usertokenid' => $usertoken->id]]);
+            event('login.logout', [
+                [
+                    'useruuid'    => $param['auth.user.uuid'],
+                    'username'    => $param['auth.user.username'],
+                    'usertokenid' => $usertoken->id],
+            ]);
         }
     }
 }

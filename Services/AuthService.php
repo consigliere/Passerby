@@ -11,7 +11,7 @@
 
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 7/7/19 10:24 PM
+ * Last modified 7/8/19 6:00 AM
  */
 
 namespace App\Components\Passerby\Services;
@@ -22,7 +22,6 @@ use App\Components\Passerby\Services\Auth\Responses\BearerToken;
 use App\Components\Passerby\Services\Auth\Services\RequestToken;
 use App\Components\Passerby\Services\Auth\Shared\AuthCallable;
 use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\App;
 
 /**
  * Class AuthService
@@ -115,9 +114,11 @@ class AuthService extends Service
      */
     public function attemptRefresh(array $data = [], array $option = [], array $param = []): array
     {
-        $token   = $this->findInputRefreshToken($data)->verifyInputRefreshToken(null)->getRefreshToken();
+        $token   = $this->findInputRefreshToken($data)
+            ->verifyInputRefreshToken(null)
+            ->verifyInputRefreshTokenIsNull(null)
+            ->getRefreshToken();
         $rqToken = (new RequestToken($this->authRepository))('refresh_token', ['refresh_token' => $token]);
-        $this->logRefresh();
 
         return (new BearerToken)(
             $rqToken
@@ -131,13 +132,14 @@ class AuthService extends Service
      */
     public function logout(array $data = [], array $option = [], array $param = []): void
     {
-        $accessToken  = $this->auth->user()->token();
-        $usertoken    = $accessToken;
-        $refreshToken = $this->authRepository->logout($accessToken->id);
+        $accessToken = $this->auth->user()->token();
+        $user        = $this->authRepository->getById($accessToken->user_id);
+
+        $this->authRepository->logout($accessToken->id);
         $accessToken->revoke();
         $this->cookie->queue($this->cookie->forget(self::REFRESH_TOKEN));
 
-        $this->logLogout($usertoken, $param);
+        $this->logLogout($user);
     }
 
     /**
@@ -171,13 +173,19 @@ class AuthService extends Service
     }
 
     /**
-     * @method logRefresh
+     * @param null $token
+     *
+     * @return $this
      */
-    private function logRefresh(): void
+    private function verifyInputRefreshTokenIsNull($token = null): self
     {
-        if (config('password.log.info.refresh.active')) {
-            event('login.refresh');
+        $newToken = $token ?? $this->refreshToken;
+
+        if (null === $newToken) {
+            throw new InvalidCredentialsException('Unauthorized');
         }
+
+        return $this;
     }
 
     /**
@@ -186,26 +194,17 @@ class AuthService extends Service
     private function logLogin($user): void
     {
         if (config('password.log.info.login.active')) {
-            event('login.message', [['user' => $user,]]);
+            event('login.message', [$user]);
         }
     }
 
     /**
-     * @param $usertoken
-     * @param $param
+     * @param $user
      */
-    private function logLogout($usertoken, $param): void
+    private function logLogout($user): void
     {
-        $request  = App::get('request');
-        $authUser = $request->user() ? $request->user()->toArray() : '';
-
         if (config('password.log.info.logout.active')) {
-            event('login.logout', [
-                [
-                    'useruuid'    => $param['auth.user.uuid'],
-                    'username'    => $param['auth.user.username'],
-                    'usertokenid' => $usertoken->id],
-            ]);
+            event('login.logout', [$user]);
         }
     }
 }

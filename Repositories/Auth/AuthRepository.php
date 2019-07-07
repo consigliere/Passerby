@@ -11,7 +11,7 @@
 
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 7/6/19 5:48 AM
+ * Last modified 7/7/19 7:39 PM
  */
 
 namespace App\Components\Passerby\Repositories\Auth;
@@ -81,5 +81,17 @@ class AuthRepository extends Repository implements AuthRepositoryInterface
     public function getUserByUsernameOrEmail(string $username)
     {
         return $this->getModel()::where('username', $username)->orWhere('email', $username);
+    }
+
+    /**
+     * @param $userId
+     *
+     * @return mixed
+     */
+    public function userWithRolePermissions($userId)
+    {
+        if (class_exists(\App\Components\Scaffold\Providers\ScaffoldServiceProvider::class)) {
+            return $this->getModel()::where('id', $userId)->with('role', 'role.permissions')->with('roles', 'roles.permissions')->first();
+        }
     }
 }

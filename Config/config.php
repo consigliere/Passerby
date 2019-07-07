@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 3/21/19 5:28 AM
+ * Last modified 7/8/19 5:49 AM
  */
 
 return [
@@ -17,10 +17,6 @@ return [
             'login'   => [
                 'active'  => false,
                 'message' => 'User has successfully login.',
-            ],
-            'refresh' => [
-                'active'  => false,
-                'message' => 'Token refreshed.',
             ],
             'logout'  => [
                 'active'  => false,

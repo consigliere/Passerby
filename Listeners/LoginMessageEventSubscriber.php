@@ -1,18 +1,17 @@
 <?php
 /**
- * Copyright(c) 2019. All rights reserved.
- * Last modified 5/16/19 8:19 AM
+ * LoginMessageEventSubscriber.php
+ * Created by @anonymoussc on 02/28/2019 3:04 AM.
  */
 
 /**
- * LoginMessageEventSubscriber.php
- * Created by @anonymoussc on 02/28/2019 3:04 AM.
+ * Copyright(c) 2019. All rights reserved.
+ * Last modified 7/8/19 5:54 AM
  */
 
 namespace App\Components\Passerby\Listeners;
 
 use App\Components\Signal\Shared\Signal;
-use Illuminate\Support\Facades\Config;
 
 /**
  * Class LoginEventSubscriber
@@ -28,33 +27,37 @@ class LoginMessageEventSubscriber
     public function subscribe($events): void
     {
         $events->listen('login.message', 'App\Components\Passerby\Listeners\LoginMessageEventSubscriber@onLoginMessage', 10);
-        $events->listen('login.refresh', 'App\Components\Passerby\Listeners\LoginMessageEventSubscriber@onRefreshMessage', 10);
         $events->listen('login.logout', 'App\Components\Passerby\Listeners\LoginMessageEventSubscriber@onLogoutMessage', 10);
     }
 
     /**
      * @param array $data
      */
-    public function onLoginMessage(array $data = []): void
+    public function onLoginMessage($data = null): void
     {
-        $this->fireLog('info', Config::get('password.log.info.login.message') . ' @' .
-            $data['user']->username . '#' . $data['user']->uuid);
+        if (isset($data->username, $data->uuid)) {
+            $username = $data->username;
+            $uuid     = $data->uuid;
+
+            $this->fireLog('info', config('password.log.info.login.message') . " @$username#$uuid");
+        } else {
+            $this->fireLog('info', config('password.log.info.login.message'));
+        }
+
     }
 
     /**
      * @param array $data
      */
-    public function onRefreshMessage(array $data = []): void
+    public function onLogoutMessage($data = null): void
     {
-        $this->fireLog('info', Config::get('password.log.info.refresh.message'));
-    }
+        if (isset($data->username, $data->uuid)) {
+            $username = $data->username;
+            $uuid     = $data->uuid;
 
-    /**
-     * @param array $data
-     */
-    public function onLogoutMessage(array $data = []): void
-    {
-        $this->fireLog('info', Config::get('password.log.info.logout.message') . ' @' .
-            $data['username'] . '#' . $data['useruuid'] . ' @tokenID#' . $data['usertokenid']);
+            $this->fireLog('info', config('password.log.info.logout.message') . " @$username#$uuid");
+        } else {
+            $this->fireLog('info', config('password.log.info.logout.message'));
+        }
     }
 }

@@ -11,7 +11,7 @@
 
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 7/6/19 11:04 PM
+ * Last modified 7/8/19 6:00 AM
  */
 
 namespace App\Components\Passerby\Http\Controllers;
@@ -52,11 +52,9 @@ class AuthController extends Controller
         $data   = [
             'form' => $request->all(),
         ];
-        $option = [];
-        $param  = [];
 
         try {
-            $data = $this->authService->attemptLogin($data, $option, $param);
+            $data = $this->authService->attemptLogin($data);
         } catch (\Exception $error) {
             $this->fireLog('error', $error->getMessage(), ['error' => $error, 'uuid' => $this->euuid]);
 
@@ -76,11 +74,9 @@ class AuthController extends Controller
         $data   = [
             'refresh_token' => $request->has('refreshToken') ? $request->refreshToken : [],
         ];
-        $option = [];
-        $param  = [];
 
         try {
-            $data = $this->authService->attemptRefresh($data, $option, $param);
+            $data = $this->authService->attemptRefresh($data);
         } catch (\Exception $error) {
             $this->fireLog('error', $error->getMessage(), ['error' => $error, 'uuid' => $this->euuid]);
 
@@ -97,12 +93,8 @@ class AuthController extends Controller
      */
     public function logout(Request $request): \Illuminate\Http\JsonResponse
     {
-        $data   = [];
-        $option = $this->getOption();
-        $param  = $this->getParam();
-
         try {
-            $this->authService->logout($data, $option, $param);
+            $this->authService->logout();
         } catch (\Exception $error) {
             $this->fireLog('error', $error->getMessage(), ['error' => $error, 'uuid' => $this->euuid]);
 

@@ -11,14 +11,15 @@
 
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 7/6/19 11:23 PM
+ * Last modified 7/7/19 10:24 PM
  */
 
 namespace App\Components\Passerby\Services;
 
 use App\Components\Passerby\Exceptions\InvalidCredentialsException;
 use App\Components\Passerby\Repositories\AuthRepositoryInterface;
-use App\Components\Passerby\Services\Auth\Service\Proxy;
+use App\Components\Passerby\Services\Auth\Responses\BearerToken;
+use App\Components\Passerby\Services\Auth\Services\RequestToken;
 use App\Components\Passerby\Services\Auth\Shared\AuthCallable;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\App;
@@ -49,6 +50,9 @@ class AuthService extends Service
      * @var AuthRepositoryInterface
      */
     private $authRepository;
+    /**
+     * @var $refreshToken
+     */
     private $refreshToken;
 
     /**
@@ -89,11 +93,14 @@ class AuthService extends Service
     public function attemptLogin(array $data = [], array $option = [], array $param = []): array
     {
         $user = $this->authRepository->getUserByUsernameOrEmail(data_get($data, 'form.username'))->first();
+
         if (null !== $user) {
-            $proxy = (new Proxy)('password', $data['form'], $user->id);
+            $rqToken = (new RequestToken($this->authRepository))('password', $data['form'], $user->id);
             $this->logLogin($user);
 
-            return $proxy;
+            return (new BearerToken)(
+                $rqToken
+            );
         }
 
         throw new InvalidCredentialsException();
@@ -108,12 +115,13 @@ class AuthService extends Service
      */
     public function attemptRefresh(array $data = [], array $option = [], array $param = []): array
     {
-        $token = $this->findInputRefreshToken($data)->verifyInputRefreshToken(null)->getRefreshToken();
-        $proxy = (new Proxy)('refresh_token', ['refresh_token' => $token]);
-
+        $token   = $this->findInputRefreshToken($data)->verifyInputRefreshToken(null)->getRefreshToken();
+        $rqToken = (new RequestToken($this->authRepository))('refresh_token', ['refresh_token' => $token]);
         $this->logRefresh();
 
-        return $proxy;
+        return (new BearerToken)(
+            $rqToken
+        );
     }
 
     /**
@@ -162,6 +170,9 @@ class AuthService extends Service
         return $this;
     }
 
+    /**
+     * @method logRefresh
+     */
     private function logRefresh(): void
     {
         if (config('password.log.info.refresh.active')) {

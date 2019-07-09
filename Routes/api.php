@@ -1,9 +1,4 @@
 <?php
-/**
- * Copyright(c) 2019. All rights reserved.
- * Last modified 5/15/19 6:45 PM
- */
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,10 +9,16 @@
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::group(['middleware' => 'api', 'prefix' => 'login', 'namespace' => '\App\Components\Passerby\Http\Controllers'], function() {
-    Route::post('/', 'AuthController@login');
-    Route::post('/refresh', 'AuthController@refresh');
+
+/**
+ * Copyright(c) 2019. All rights reserved.
+ * Last modified 7/9/19 5:50 PM
+ */
+
+Route::group(['middleware' => 'api', 'prefix' => 'login', 'namespace' => '\App\Components\Passerby\Http\Controllers'], static function() {
+    Route::post('/', 'AuthController@login')->middleware('http.accept', 'http.content-type');
+    Route::post('/refresh', 'AuthController@refresh')->middleware('http.accept');
 });
-Route::group(['middleware' => 'auth:api', 'prefix' => '', 'namespace' => '\App\Components\Passerby\Http\Controllers'], function() {
-    Route::post('/logout', 'AuthController@logout');
+Route::group(['middleware' => 'auth:api', 'prefix' => '', 'namespace' => '\App\Components\Passerby\Http\Controllers'], static function() {
+    Route::post('/logout', 'AuthController@logout')->middleware('http.accept');
 });

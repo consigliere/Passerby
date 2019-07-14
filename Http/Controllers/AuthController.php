@@ -11,7 +11,7 @@
 
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 7/8/19 6:00 AM
+ * Last modified 7/12/19 8:59 PM
  */
 
 namespace App\Components\Passerby\Http\Controllers;
@@ -58,10 +58,10 @@ class AuthController extends Controller
         } catch (\Exception $error) {
             $this->fireLog('error', $error->getMessage(), ['error' => $error, 'uuid' => $this->euuid]);
 
-            return $this->response($this->getErrorResponse($this->euuid, $error), httpStatusCode($error));
+            return response()->ApiError($this->euuid, $error);
         }
 
-        return $this->response($data);
+        return response()->Api($data);
     }
 
     /**
@@ -80,10 +80,10 @@ class AuthController extends Controller
         } catch (\Exception $error) {
             $this->fireLog('error', $error->getMessage(), ['error' => $error, 'uuid' => $this->euuid]);
 
-            return $this->response($this->getErrorResponse($this->euuid, $error), httpStatusCode($error));
+            return response()->ApiError($this->euuid, $error);
         }
 
-        return $this->response($data);
+        return response()->Api($data);
     }
 
     /**
@@ -98,9 +98,9 @@ class AuthController extends Controller
         } catch (\Exception $error) {
             $this->fireLog('error', $error->getMessage(), ['error' => $error, 'uuid' => $this->euuid]);
 
-            return $this->response($this->getErrorResponse($this->euuid, $error), httpStatusCode($error));
+            return response()->ApiError($this->euuid, $error);
         }
 
-        return $this->response(null, 204);
+        return response()->Api(null, 204);
     }
 }

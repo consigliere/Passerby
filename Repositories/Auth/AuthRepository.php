@@ -11,7 +11,7 @@
 
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 7/7/19 7:39 PM
+ * Last modified 7/19/19 11:34 PM
  */
 
 namespace App\Components\Passerby\Repositories\Auth;
@@ -19,7 +19,6 @@ namespace App\Components\Passerby\Repositories\Auth;
 use App\Components\Passerby\Entities\User;
 use App\Components\Passerby\Repositories\AuthRepositoryInterface;
 use App\Components\Passerby\Repositories\Repository;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -35,7 +34,7 @@ class AuthRepository extends Repository implements AuthRepositoryInterface
      */
     public function getModel()
     {
-        $this->userCfg = Config::get('auth.providers.apis.model');
+        $this->userCfg = config('auth.providers.apis.model');
 
         return new $this->userCfg;
     }

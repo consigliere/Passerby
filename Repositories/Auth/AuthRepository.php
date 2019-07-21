@@ -11,7 +11,7 @@
 
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 7/19/19 11:34 PM
+ * Last modified 7/21/19 10:47 AM
  */
 
 namespace App\Components\Passerby\Repositories\Auth;
@@ -65,7 +65,7 @@ class AuthRepository extends Repository implements AuthRepositoryInterface
      *
      * @return int
      */
-    public function logout($accessTokenId)
+    public function logout(string $accessTokenId)
     {
         return DB::table('oauth_refresh_tokens')
             ->where('access_token_id', $accessTokenId)

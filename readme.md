@@ -21,6 +21,8 @@
             - [Http Request](#http-request)
             - [Http Response](#http-response)
     - [Logout User](#logout-user)
+        - [Http Request](#http-request)
+        - [Http Response](#http-response)
     - [API Tests](#api-tests)
 
 ## API

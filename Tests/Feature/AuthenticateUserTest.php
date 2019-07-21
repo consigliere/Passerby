@@ -6,7 +6,7 @@
 
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 7/21/19 8:01 AM
+ * Last modified 7/21/19 8:10 AM
  */
 
 namespace App\Components\Scaffold\Tests\Feature;
@@ -15,7 +15,7 @@ namespace App\Components\Scaffold\Tests\Feature;
  * Class AuthenticateUserTest
  * @package App\Components\Scaffold\Tests\Feature
  */
-class AuthenticateUserTest extends \Tests\PasserbyApiTestCase
+class AuthenticateUserTest extends \Tests\PasswordApiTestCase
 {
     /**
      * @return void

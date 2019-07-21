@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 5/15/19 9:21 AM
+ * Last modified 7/21/19 8:05 AM
  */
 
 namespace App\Components\Passerby\Providers;
@@ -35,6 +35,10 @@ class PasserbyServiceProvider extends ServiceProvider
 
         $dispatcher = $this->app->make('events');
         $dispatcher->subscribe(LoginMessageEventSubscriber::class);
+
+        $this->publishes([
+            __DIR__ . '/../Tests' => base_path() . '/tests',
+        ], 'password_tests');
     }
 
     /**

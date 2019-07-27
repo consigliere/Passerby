@@ -6,7 +6,7 @@
 
 /**
  * Copyright(c) 2019. All rights reserved.
- * Last modified 7/21/19 11:03 AM
+ * Last modified 7/28/19 6:11 AM
  */
 
 namespace App\Components\Scaffold\Tests\Feature;
@@ -24,10 +24,6 @@ class LogoutUserTest extends \Tests\PasswordApiTestCase
     {
         $this->init();
 
-        /*$header = [
-            'Accept'       => 'application/vnd.api+json',
-        ];*/
-
         $header['Accept']       = 'application/vnd.api+json';
         $header['Content-Type'] = 'application/vnd.api+json';
 
@@ -35,8 +31,6 @@ class LogoutUserTest extends \Tests\PasswordApiTestCase
             "username" => "user",
             "password" => "user",
         ], $header);
-
-        //$x = $resp->getContent();
 
         $content = json_decode($resp->getContent());
 
